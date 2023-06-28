@@ -1,16 +1,33 @@
 import pyautogui
 import os
+import sys
+from pathlib import Path
 
-path = os.getcwd()
+
+def fetch_resource(resource_path: Path) -> Path:
+    """
+    Function needed to run --onefile
+    :param resource_path:
+    :return:
+    """
+    try:  # running as *.exe; fetch resource from temp directory
+        base_path = Path(sys._MEIPASS)
+    except AttributeError:  # running as script; return unmodified path
+        return resource_path
+    else:  # return temp resource path
+        return base_path.joinpath(resource_path)
 
 
 def genericCoordinates(name):
+    path = os.getcwd()
+    filepath = f'{path}/img/{name}.png'
+    filepath = fetch_resource(filepath)
     confidence = 0.9
     if name == 'mutl/calibration_s':
         confidence = 0.55
     x, y = -1, -1
     try:
-        x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)
+        x, y = pyautogui.locateCenterOnScreen(filepath, confidence=confidence)
         return x, y
 
     except TypeError:
