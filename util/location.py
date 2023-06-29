@@ -19,15 +19,21 @@ def fetch_resource(resource_path: Path) -> Path:
 
 
 def genericCoordinates(name):
-    path = os.getcwd()
-    filepath = f'{path}/img/{name}.png'
-    filepath = fetch_resource(filepath)
+    confidence = 0.9
+    try:
+        x, y, w, h = pyautogui.locateOnScreen(f'{path}/img/{name}.png', confidence=confidence)
+        return x, y, w, h
+    except TypeError:
+        return -1, -1, -1, -1
+
+
+def genericCoordinatesCenter(name):
     confidence = 0.9
     if name == 'mutl/calibration_s':
         confidence = 0.55
     x, y = -1, -1
     try:
-        x, y = pyautogui.locateCenterOnScreen(filepath, confidence=confidence)
+        x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)
         return x, y
 
     except TypeError:
@@ -62,8 +68,8 @@ def fieldCalib():
 
 # RUPCTOOL SCREEN
 def MU0():
-    x, y = genericCoordinates('ru/MU0')
-    x1, y1 = genericCoordinates('ru/MU0_S')
+    x, y = genericCoordinatesCenter('ru/MU0')
+    x1, y1 = genericCoordinatesCenter('ru/MU0_S')
     if x > 0 and y > 0:
         return x, y
     if x1 > 0 and y1 > 0:
@@ -97,35 +103,97 @@ def install():
 
 # MUTL
 def calibration():
-    x, y = genericCoordinates('mutl/calibration')
-    x1, y1 = genericCoordinates('mutl/calibration_s')
-    print(x, x1, y, y1)
-    if x > 0 and y > 0:
+    x0, y0, w, h = genericCoordinates('mutl/calibration_selected')
+    if x0 and y0 > 0:
+        x = x0 + w/2
+        y = y0 + h/2
         return x, y
-    if x1 > 0 and y1 > 0:
-        return x1, y1
-    else:
-        return -1, -1
+    x0, y0, w, h = genericCoordinates('mutl/calibration_unselected')
+    if x0 and y0 > 0:
+        x = x0 + 3*w/7
+        y = y0 + h/2
+        return x, y
+    x0, y0, w, h = genericCoordinates('mutl/calibration_opt_selected')
+    if x0 and y0 > 0:
+        x = x0 + (2*w/5)
+        y = y0 + h/2
+        return x, y
+    return -1, -1
 
 
 def calibrationOptional():
-    x, y = genericCoordinates('mutl/calibration_option')
-    x1, y1 = genericCoordinates('mutl/calibration_option_s')
-    print(x, x1, y, y1)
-    if x > 0 and y > 0:
+    x0, y0, w, h = genericCoordinates('mutl/calibration_selected')
+    if x0 and y0 > 0:
+        x = x0 + 4*w/5
+        y = y0 + h/2
         return x, y
-    if x1 > 0 and y1 > 0:
-        return x1, y1
-    else:
-        return -1, -1
+    x0, y0, w, h = genericCoordinates('mutl/calibration_unselected')
+    if x0 and y0 > 0:
+        x = x0 + (4*w/5)
+        y = y0 + h/2
+        return x, y
+    x0, y0, w, h = genericCoordinates('mutl/calibration_opt_selected')
+    if x0 and y0 > 0:
+        x = x0 + (4*w/5)
+        y = y0 + h/2
+        return x, y
+    return -1, -1
+
+
+def lastPage():
+    # only left
+    x0, y0, w, h = genericCoordinates('mutl/left_noright')
+    if x0 > 0 and y0 > 0:
+        y = y0 + h/2
+        x = x0 + w/4
+        return x, y
+    return -1, -1
+
+
+def firstPage():
+    x0, y0, w, h = genericCoordinates('mutl/right_noleft')
+    if x0 > 0 and y0 > 0:
+        y = y0 + h/2
+        x = x0 + (3*w/4)
+        return x, y
+    return -1, -1
+
+
+def midPage(side):
+    x0, y0, w, h = genericCoordinates('mutl/left_right')
+    if x0 > 0 and y0 > 0:
+        if side == 'left' and x0 > 0:
+            y = y0 + h / 2
+            x = x0 + w / 4
+            return x, y
+        if side == 'right' and x0 > 0:
+            y = y0 + h / 2
+            x = x0 + (3 * w / 4)
+            return x, y
+    return -1, -1
 
 
 def left():
-    return genericCoordinates('mutl/left')
+    x, y = lastPage()
+    if x > 0 and y > 0:
+        return x, y
+    x, y = midPage('left')
+    if x > 0 and y > 0:
+        return x, y
+    print('No icon found')
+    return -1, -1
 
 
 def right():
-    return genericCoordinates('mutl/right')
+    x, y = firstPage()
+    if x > 0 and y > 0:
+        return x, y
+    x, y = midPage('right')
+    if x > 0 and y > 0:
+        return x, y
+    print('No icon found')
+    return -1, -1
+
 
 
 #CALIBRATION MENU
