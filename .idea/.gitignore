@@ -1,5 +1,15 @@
 # Default ignored files
 /shelf/
-/dist/
+
 /workspace.xml
 /macList.txt
+
+# directories
+dist/
+build/
+
+# ignores all .md files
+.md
+
+# does not ignore the README.md file
+!README.md
