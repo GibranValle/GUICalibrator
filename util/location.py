@@ -1,22 +1,21 @@
 import pyautogui
 import os
 import sys
+
+path = os.getcwd()
+"""
 from pathlib import Path
-
-
 def fetch_resource(resource_path: Path) -> Path:
-    """
     Function needed to run --onefile
     :param resource_path:
     :return:
-    """
     try:  # running as *.exe; fetch resource from temp directory
         base_path = Path(sys._MEIPASS)
     except AttributeError:  # running as script; return unmodified path
         return resource_path
     else:  # return temp resource path
         return base_path.joinpath(resource_path)
-
+"""
 
 def genericCoordinates(name):
     confidence = 0.9
@@ -24,7 +23,7 @@ def genericCoordinates(name):
         x, y, w, h = pyautogui.locateOnScreen(f'{path}/img/{name}.png', confidence=confidence)
         return x, y, w, h
     except TypeError:
-        return -1, -1, -1, -1
+        return -1, -1
 
 
 def genericCoordinatesCenter(name):
@@ -42,28 +41,28 @@ def genericCoordinatesCenter(name):
 
 # FF_tools
 def isExposing():
-    return genericCoordinates('ff/xray_exposing')
+    return genericCoordinatesCenter('ff/xray_exposing')
 
 
 # AWS
 def blockedIcon():
-    return genericCoordinates('aws/xray_blocked')
+    return genericCoordinatesCenter('aws/xray_blocked')
 
 
 def stdbyIcon():
-    return genericCoordinates('aws/xray_standby')
+    return genericCoordinatesCenter('aws/xray_standby')
 
 
 def okExposure():
-    return genericCoordinates('aws/ok')
+    return genericCoordinatesCenter('aws/ok')
 
 
 def calib_button():
-    return genericCoordinates('aws/calib_button')
+    return genericCoordinatesCenter('aws/calib_button')
 
 
 def fieldCalib():
-    return genericCoordinates('aws/fieldcalib_button')
+    return genericCoordinatesCenter('aws/fieldcalib_button')
 
 
 # RUPCTOOL SCREEN
@@ -79,8 +78,8 @@ def MU0():
 
 
 def MCU0():
-    x, y = genericCoordinates('ru/MCU0')
-    x1, y1 = genericCoordinates('ru/MCU0_S')
+    x, y = genericCoordinatesCenter('ru/MCU0')
+    x1, y1 = genericCoordinatesCenter('ru/MCU0_S')
     if x > 0 and y > 0:
         return x, y
     if x1 > 0 and y1 > 0:
@@ -90,15 +89,15 @@ def MCU0():
 
 
 def mutl():
-    return genericCoordinates('ru/mutl')
+    return genericCoordinatesCenter('ru/mutl')
 
 
 def new():
-    return genericCoordinates('ru/new')
+    return genericCoordinatesCenter('ru/new')
 
 
 def install():
-    return genericCoordinates('ru/install')
+    return genericCoordinatesCenter('ru/install')
 
 
 # MUTL

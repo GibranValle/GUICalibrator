@@ -3,6 +3,7 @@ import threading as th
 import sys
 from util.location import blockedIcon, stdbyIcon, isExposing
 from multiprocessing.pool import ThreadPool
+import customtkinter as ck
 
 
 def editOutput(line2, label_output2=None):
@@ -36,40 +37,62 @@ def waitTillEnd(init, final, label_output2):
     return secsPassed
 
 
-def waitTillReady(init, final, label_output2):
+def waitTillReady(init, final, label: ck.CTkLabel):
     """
-    Delay of n secs until standby icon is displayed on screen.
+    Delay of n secs until blocked icon is displayed on screen, reverse count
     :param init: initial count in secs
     :param final: final count in secs
+    :param label: label for output text
     :return: breaks if icon is found
     """
-    minTime = 10
     secsPassed = 0
-    for c in range(init, final + 1):
+    for c in range(init, final - 1):
         time.sleep(1)
         secsPassed += 1
-        text = createText('Next exposure', secsPassed)
-        editOutput(text, label_output2)
-        if (isStdBy() and c >= minTime) or c == final:
+        text = createText('Exposure end', secsPassed)
+        label.configure(text=text)
+        if isExposureDone():
             break
     return secsPassed
 
 
-def waitTillEndYellow(final, init, label_output2):
+def waitTillStartYellow(final, label: ck.CTkLabel, init = 0):
+    """
+    Delay of n secs until blocked icon is displayed on screen, reverse count
+    :param init: initial count in secs
+    :param final: final count in secs
+    :param label: label for output text
+    :return: breaks if icon is found
+    """
+    secsPassed = 0
+    for c in range(init, final - 1):
+        if not isExposureDone():
+            label.configure(text='Under exposure...')
+            break
+        secsPassed += 1
+        time.sleep(1)
+        text = createText('Wait for exposure start: ', secsPassed)
+        label.configure(text=text)
+    if not isExposureDone():
+        label.configure(text='End of exposure...')
+        return secsPassed
+    return -1
+
+def waitTillEndYellow(final, init, label: ck.CTkLabel):
     """
     Delay of n secs until blocked icon is displayed on screen, reverse count
     :param init: initial count in secs
     :param final: final count in secs
     :return: breaks if icon is found
     """
-    minTime = 60*10
+    minTime = 10
     secsPassed = 0
     for c in range(init, final - 1):
         time.sleep(1)
         secsPassed += 1
         text = createText('Exposure end', secsPassed)
-        editOutput(text, label_output2)
-        if (isExposureDone() and c >= minTime) or c == final:
+        label.configure(text=text)
+        if isExposureDone():
             break
     return secsPassed
 
@@ -107,6 +130,7 @@ def isBlocked():
 
 def isExposureDone():
     x, y = isExposing()
+    print(x, y)
     if x > 0 and y > 0:
         return False
     return True
