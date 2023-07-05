@@ -1,6 +1,6 @@
 #      0             1                  2         3         4                       5                      6            7          8           9
 # mode = 'ma Full', 'Single shot', 'Save MAC', 'Create WOL file', 'Basic', 'Stereo', 'TOMO', 'ES', 'IconFinder', 'Window'
-only_menu = 'ma Full', 'Single shot'
+only_menu = 'mA Full', 'Single shot'
 with_output = 'Save MAC', 'Create WOL file'
 with_submenu =  'Basic', 'Stereo', 'Tomo', 'ES',
 with_submenu_lastmenu = 'IconFinder', 'Window'

@@ -5,117 +5,73 @@ from util.location import blockedIcon, stdbyIcon, isExposing
 from multiprocessing.pool import ThreadPool
 import customtkinter as ck
 
-
-def editOutput(line2, label_output2=None):
-    if len(line2) > 0:
-        label_output2.configure(text=line2)
+stopFlag = False
 
 
-def createText(msg, count):
-    minutes = count // 60
-    secs = count % 60
-    text = f'{msg}: {secs}s' if minutes <= 0 else f'{msg}: {minutes}m {secs}s'
-    return text
-
-
-def waitTillEnd(init, final, label_output2):
-    """
-    Delay of n secs until blocked icon is displayed on screen.
-    :param init: initial count in secs
-    :param final: final count in secs
-    :return: breaks if icon is found
-    """
-    minTime = 3
-    secsPassed = 0
-    for c in range(init, final + 1):
+def genericCounter(label, init, final, minTime, breakCondition, text):
+    global stopFlag
+    count = range(init, final + 1)
+    if final < init:
+        count = range(init, final - 1, -1)
+    global stopFlag
+    secs = 0
+    for c in count:
+        secs += 1
+        message = createMessage(text, c)
+        editOutput(message, label)
         time.sleep(1)
-        secsPassed += 1
-        text = createText('Exposure end', secsPassed)
-        editOutput(text, label_output2)
-        if (isBlocked() and c >= minTime) or c == final:
+        if breakCondition() and secs >= minTime:
+            return -2
             break
-    return secsPassed
+        elif stopFlag:
+            return -1
+    return secs
+
+
+def countdown(label, final, text='', init=0):
+    minTime = 0
+    breakCondition = Pass
+    secs = genericCounter(label, init, final, minTime, breakCondition, text)
+    return secs
+
+
+def waitTillEnd(init, final, label: ck.CTkLabel):
+    minTime = 4
+    breakCondition = isBlocked
+    text = 'Waiting for end'
+    secs = genericCounter(label, init, final, minTime, breakCondition, text)
+    return secs
 
 
 def waitTillReady(init, final, label: ck.CTkLabel):
-    """
-    Delay of n secs until blocked icon is displayed on screen, reverse count
-    :param init: initial count in secs
-    :param final: final count in secs
-    :param label: label for output text
-    :return: breaks if icon is found
-    """
-    secsPassed = 0
-    for c in range(init, final - 1):
-        time.sleep(1)
-        secsPassed += 1
-        text = createText('Exposure end', secsPassed)
-        label.configure(text=text)
-        if isExposureDone():
-            break
-    return secsPassed
+    minTime = 15
+    breakCondition = isStdBy
+    text = 'Waiting for next'
+    secs = genericCounter(label, init, final, minTime, breakCondition, text)
+    return secs
 
 
-def waitTillStartYellow(final, label: ck.CTkLabel, init = 0):
-    """
-    Delay of n secs until blocked icon is displayed on screen, reverse count
-    :param init: initial count in secs
-    :param final: final count in secs
-    :param label: label for output text
-    :return: breaks if icon is found
-    """
-    secsPassed = 0
-    for c in range(init, final - 1):
-        if not isExposureDone():
-            label.configure(text='Under exposure...')
-            break
-        secsPassed += 1
-        time.sleep(1)
-        text = createText('Wait for exposure start: ', secsPassed)
-        label.configure(text=text)
-    if not isExposureDone():
-        label.configure(text='End of exposure...')
-        return secsPassed
-    return -1
+def waitTillStartYellow(final, label: ck.CTkLabel, init=0):
+    minTime = 3
+    breakCondition = isExposureNotDone
+    text = 'Wait for start'
+    secs = genericCounter(label, init, final, minTime, breakCondition, text)
+    return secs
+
 
 def waitTillEndYellow(final, init, label: ck.CTkLabel):
-    """
-    Delay of n secs until blocked icon is displayed on screen, reverse count
-    :param init: initial count in secs
-    :param final: final count in secs
-    :return: breaks if icon is found
-    """
-    minTime = 10
-    secsPassed = 0
-    for c in range(init, final - 1):
-        time.sleep(1)
-        secsPassed += 1
-        text = createText('Exposure end', secsPassed)
-        label.configure(text=text)
-        if isExposureDone():
-            break
-    return secsPassed
+    minTime = 60 * 4
+    breakCondition = isExposureDone
+    text = 'Wait for end'
+    secs = genericCounter(label, init, final, minTime, breakCondition, text)
+    return secs
 
 
-def keyboardDelay(init, final, message, label_output2):
-    passed = 0
-    count = range(init, final + 1)
-    if init > final:
-        count = range(init, final, -1)
-    for _ in count:
-        passed += 1
-        text = createText(f'{message} ', passed)
-        editOutput(text, label_output2)
-        clearLine()
-        time.sleep(1)
-    clearLine()
-    text = createText('Time waited', passed)
-    editOutput(text, label_output2)
-    return passed
-
+# --------------------------- AUXILIARY -----------------------------------------------------------
 
 def isStdBy():
     x, y = stdbyIcon()
+    print(x, y)
     if x > 0 and y > 0:
         return True
     return False
@@ -123,6 +79,7 @@ def isStdBy():
 
 def isBlocked():
     x, y = blockedIcon()
+    print(x, y)
     if x > 0 and y > 0:
         return True
     return False
@@ -134,3 +91,40 @@ def isExposureDone():
     if x > 0 and y > 0:
         return False
     return True
+
+
+def isExposureNotDone():
+    x, y = isExposing()
+    print(x, y)
+    if x > 0 and y > 0:
+        return True
+    return False
+
+def getStopFlag():
+    global stopFlag
+    return stopFlag
+
+
+def setStopFlag():
+    global stopFlag
+    stopFlag = True
+
+
+def resetStopFlag():
+    global stopFlag
+    stopFlag = False
+
+
+def editOutput(line2, label: ck.CTkLabel):
+    label.configure(text=line2)
+
+
+def createMessage(msg, count):
+    minutes = count // 60
+    secs = count % 60
+    text = f'{msg}: {secs}s' if minutes <= 0 else f'{msg}: {minutes}m {secs}s'
+    return text
+
+
+def Pass():
+    return False
