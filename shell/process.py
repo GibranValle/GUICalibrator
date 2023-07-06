@@ -8,16 +8,6 @@ import util.location as loc
 import pyautogui as pg
 import shutil
 
-def openChrome():
-    if process_exists('chrome.exe'):
-        return openWindow('Chrome')
-    openApp('Chrome')
-
-
-def closeChrome():
-    name = 'chrome.exe'
-    closeApp(name)
-
 
 def openRU():
     if process_exists('RuPcTool.exe'):
@@ -190,7 +180,7 @@ def startDefectSolidBpyCalib():
     pg.click(x, y)
 
 
-def startDefectSolidTomo():
+def startDefectSolidTomoCalib():
     openCalibrationMenuMouse()
     x, y = loc.defectSolidTomo()
     if x <= 0 and y <= 0:

@@ -1,10 +1,14 @@
 import customtkinter
+import pyautogui
+
 import util.serialCOM as com
 from util import menu_list as m
 from threading import Thread
 from calibrations.maFullCalib import mAFullCalibration
 from util.delayManager import setStopFlag
 from calibrations.exposureCalibration import *
+from util.location import *
+import shell.process as pro
 
 # theme settings
 customtkinter.set_appearance_mode("dark")
@@ -29,11 +33,14 @@ class App(customtkinter.CTk):
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # ------------------------------------------------------------ COMPONENTS ------------------------------------------------------------------------
+
         # serial
-        self.label_serial = customtkinter.CTkLabel(master=self, font=self.font_title, text_color='red', text='Offline')
-        self.label_serial.place(relx=0.1, rely=0.06)
-        self.button_serial = customtkinter.CTkButton(master=self, command=self.connectButton, font=self.font_text, text='Open serial port', height=40)
-        self.button_serial.place(relx=0.5, rely=0.05)
+        self.frame1 = customtkinter.CTkFrame(master=self, height=60, fg_color="#353535")
+        self.frame1.pack(pady=10, padx=10, fill='both')
+        self.label_serial = customtkinter.CTkLabel(master=self.frame1, font=self.font_title, text_color='red', text='Offline')
+        self.label_serial.place(relx=0.1, rely=0.25)
+        self.button_serial = customtkinter.CTkButton(master=self.frame1, command=self.connectButton, font=self.font_text, text='Open serial port', height=40)
+        self.button_serial.place(relx=0.45, rely=0.175)
 
         # MAIN MENU
         # ROW 1
@@ -213,35 +220,220 @@ class App(customtkinter.CTk):
             self.edit_button('Start Exposure')
             return
 
-        if self.mode.lower() == 'ma full':
+        if self.mode == 'mA Full':
             self.isRunning = True
             self.edit_button('Stop Exposure', error=True)
             Thread(target=mAFullCalibration, args=[self.label_output1, self.label_output2], daemon=True).start()
 
-        elif self.mode.lower() == 'single shot':
+        elif self.mode == 'Single shot':
             self.isRunning = True
             self.edit_button('Stop Exposure', error=True)
             Thread(target=singleShot, args=[self.label_output1, self.label_output2], daemon=True).start()
 
-        elif self.submode.lower() == 'defect-solid':
-            self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
-            Thread(target=defectSolidCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+        elif self.mode == 'Basic':
 
-        elif self.submode.lower() == 'pixel-defect':
-            self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
-            Thread(target=pixedDefectCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+            if self.submode == 'Defect-solid':
+                self.isRunning = True
+                self.edit_button('Stop Exposure', error=True)
+                Thread(target=defectSolidCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
 
-        elif self.submode.lower() == 'shading':
-            self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
-            Thread(target=shadingCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+            elif self.submode == 'Pixel-defect':
+                self.isRunning = True
+                self.edit_button('Stop Exposure', error=True)
+                Thread(target=pixedDefectCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
 
-        elif self.submode.lower() == 'x-ray uniformity':
-            self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
-            Thread(target=uniformityCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+            elif self.submode == 'Shading':
+                self.isRunning = True
+                self.edit_button('Stop Exposure', error=True)
+                Thread(target=shadingCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+
+            elif self.submode == 'X-ray uniformity':
+                self.isRunning = True
+                self.edit_button('Stop Exposure', error=True)
+                Thread(target=uniformityCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+
+        elif self.mode == 'Stereo':
+            pass
+
+        elif self.mode == 'Tomo':
+            pass
+
+        elif self.mode == 'ES':
+            pass
+
+        elif self.mode == 'IconFinder':
+            print('ICON FINDER')
+            if self.option == 'Stand by':
+                pyautogui.moveTo(stdbyIcon(), duration=0.5)
+
+            elif self.option == 'Blocked':
+                pyautogui.moveTo(blockedIcon(), duration=0.5)
+
+            elif self.option == 'Ok red':
+                pyautogui.moveTo(okExposure(), duration=0.5)
+
+            elif self.option == 'Calib button':
+                pyautogui.moveTo(calib_button(), duration=0.5)
+
+            elif self.option == 'Field calib button':
+                pyautogui.moveTo(fieldCalib(), duration=0.5)
+
+            elif self.option == 'MU0':
+                pyautogui.moveTo(MU0(), duration=0.5)
+
+            elif self.option == 'MCU0':
+                pyautogui.moveTo(MCU0(), duration=0.5)
+
+            elif self.option == 'New':
+                pyautogui.moveTo(new(), duration=0.5)
+
+            elif self.option == 'Install':
+                pyautogui.moveTo(install(), duration=0.5)
+
+            elif self.option == 'calibration':
+                pyautogui.moveTo(calibration(), duration=0.5)
+
+            elif self.option == 'calibration (opt)':
+                pyautogui.moveTo(calibrationOptional(), duration=0.5)
+
+            elif self.option == 'left':
+                pyautogui.moveTo(left(), duration=0.5)
+
+            elif self.option == 'right':
+                pyautogui.moveTo(right(), duration=0.5)
+
+            elif self.option == 'Enable HLV':
+                pyautogui.moveTo(calibration(), duration=0.5)
+
+            elif self.option == 'Enable MAG':
+                pyautogui.moveTo(calibration(), duration=0.5)
+
+            elif self.option == 'Enable Ment Mode':
+                pyautogui.moveTo(calibration(), duration=0.5)
+
+            elif self.option == 'offset':
+                pyautogui.moveTo(offset(), duration=0.5)
+
+            elif self.option == 'defect':
+                pyautogui.moveTo(defect(), duration=0.5)
+
+            elif self.option == 'defect':
+                pyautogui.moveTo(defect(), duration=0.5)
+
+            elif self.option == 'defect solid':
+                pyautogui.moveTo(defectSolid(), duration=0.5)
+
+            elif self.option == 'pixel defect':
+                pyautogui.moveTo(pixelDefect(), duration=0.5)
+
+            elif self.option == 'shading':
+                pyautogui.moveTo(shading(), duration=0.5)
+
+            elif self.option == 'uniformity':
+                pyautogui.moveTo(uniformity(), duration=0.5)
+
+            elif self.option == 'sensitivity':
+                pyautogui.moveTo(sensitivity(), duration=0.5)
+
+            elif self.option == 'defect solid stereo':
+                pyautogui.moveTo(defectSolidStereo(), duration=0.5)
+
+            elif self.option == 'defect solid biopsy':
+                pyautogui.moveTo(defectSolidBpy(), duration=0.5)
+
+            elif self.option == 'defect solid tomo':
+                pyautogui.moveTo(defectSolidTomo(), duration=0.5)
+
+            elif self.option == 'x-ray uniformity stereo':
+                pyautogui.moveTo(uniformityStereo(), duration=0.5)
+
+            elif self.option == 'x-ray uniformity biopsy':
+                pyautogui.moveTo(uniformityBpy(), duration=0.5)
+
+            elif self.option == 'x-ray uniformity tomo':
+                pyautogui.moveTo(uniformityTomo(), duration=0.5)
+
+            elif self.option == 'x-ray uniformity es':
+                pyautogui.moveTo(uniformityES(), duration=0.5)
+
+        elif self.mode == 'Window':
+
+            if self.option == 'Ok red':
+                pyautogui.moveTo(okExposure(), duration=0.5)
+                pyautogui.click(okExposure())
+
+            elif self.option == 'Calib button':
+                pyautogui.moveTo(calib_button(), duration=0.5)
+                pyautogui.click(calib_button())
+
+            elif self.option == 'Field calib button':
+                pyautogui.moveTo(calib_button(), duration=0.25)
+                pyautogui.click(calib_button())
+                pyautogui.moveTo(fieldCalib(), duration=0.25)
+                pyautogui.click(fieldCalib())
+
+            elif self.option == 'Open RU':
+                pro.openRU()
+
+            elif self.option == 'Close RU':
+                pro.closeRU()
+
+            elif self.option == 'Open MUTL MU':
+                pro.openMUTLMU()
+
+            elif self.option == 'Open MUTL MCU':
+                pro.openMUTLMCU()
+
+            elif self.option == 'Close MUTL':
+                pro.closeMUTL()
+
+            elif self.option == 'Enable HVL':
+                pro.openMUTLMU()
+
+            elif self.option == 'Enable MAG':
+                pro.openMUTLMU()
+
+            elif self.option == 'Enable Ment Mode':
+                pro.openMUTLMU()
+
+            elif 'offset' in self.option:
+                pro.startOffsetCalib()
+
+            elif 'defect' in self.option:
+                pro.startDefectCalib()
+
+            elif 'defect solid' in self.option:
+                pro.startDefectCalib()
+
+            elif 'pixel defect' in self.option:
+                pro.startPixelDefectCalib()
+
+            elif 'shading' in self.option:
+                pro.startShadingCalib()
+
+            elif 'uniformity' in self.option:
+                pro.startUniformityCalib()
+
+            elif 'defect solid stereo' in self.option:
+                pro.startDefectSolidCalib()
+
+            elif 'defect solid biopsy' in self.option:
+                pro.startDefectSolidBpyCalib()
+
+            elif 'defect solid tomo' in self.option:
+                pro.startDefectSolidTomoCalib()
+
+            elif 'x-ray uniformity stereo' in self.option:
+                pro.startUniformityStereoCalib()
+
+            elif 'x-ray uniformity biopsy' in self.option:
+                pro.startUniformityBpyCalib()
+
+            elif 'x-ray uniformity tomo' in self.option:
+                pro.startUniformityTomoCalib()
+
+            elif 'x-ray uniformity ES' in self.option:
+                pro.startUniformityESCalib()
 
     def editLabel1(self, text=''):
         self.label_2.configure(text=text)

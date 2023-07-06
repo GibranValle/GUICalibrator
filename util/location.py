@@ -19,20 +19,21 @@ def fetch_resource(resource_path: Path) -> Path:
 
 def genericCoordinates(name):
     confidence = 0.9
+    if name == 'mutl/calibration_opt_selected':
+        confidence = 0.5
     try:
         x, y, w, h = pyautogui.locateOnScreen(f'{path}/img/{name}.png', confidence=confidence)
         return x, y, w, h
     except TypeError:
-        return -1, -1
+        return -1, -1, -1, -1
 
 
 def genericCoordinatesCenter(name):
     confidence = 0.9
-    if name == 'mutl/calibration_s':
-        confidence = 0.55
     x, y = -1, -1
     try:
         x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)
+        print(x, y)
         return x, y
 
     except TypeError:
@@ -102,17 +103,22 @@ def install():
 
 # MUTL
 def calibration():
+    print('LOOKING FOR CALIBRATION')
     x0, y0, w, h = genericCoordinates('mutl/calibration_selected')
+    print(x0, y0)
     if x0 and y0 > 0:
-        x = x0 + w/2
+        x = x0 + w/3
         y = y0 + h/2
         return x, y
     x0, y0, w, h = genericCoordinates('mutl/calibration_unselected')
+    print(x0, y0)
+
     if x0 and y0 > 0:
         x = x0 + 3*w/7
         y = y0 + h/2
         return x, y
     x0, y0, w, h = genericCoordinates('mutl/calibration_opt_selected')
+    print(x0, y0)
     if x0 and y0 > 0:
         x = x0 + (2*w/5)
         y = y0 + h/2
