@@ -40,7 +40,8 @@ def startListening():
 def endListening():
     communicate("X")
     time.sleep(0.2)
-    global isListening
+    global isListening, offline
+    offline = True
     isListening = False
     try:
         arduino.close()

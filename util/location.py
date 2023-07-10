@@ -100,6 +100,64 @@ def new():
 def install():
     return genericCoordinatesCenter('ru/install')
 
+def left():
+    x0, y0, w, h = genericCoordinates('mutl/right_noleft')
+    if x0 and y0 > 0:
+        x = x0 + w/3
+        y = y0 + h/2
+        return x, y
+
+    x0, y0, w, h = genericCoordinates('mutl/left_right')
+    if x0 and y0 > 0:
+        x = x0 + w/3
+        y = y0 + h/2
+        return x, y
+
+    x0, y0, w, h = genericCoordinates('mutl/left_noright')
+    if x0 and y0 > 0:
+        x = x0 + w/3
+        y = y0 + h/2
+        return x, y
+
+    print('No icon found')
+    return -1, -1
+
+
+def right():
+    x0, y0, w, h = genericCoordinates('mutl/right_noleft')
+    if x0 and y0 > 0:
+        x = x0 + 2*w/3
+        y = y0 + h/2
+        return x, y
+
+    x0, y0, w, h = genericCoordinates('mutl/left_right')
+    if x0 and y0 > 0:
+        x = x0 + 2*w/3
+        y = y0 + h/2
+        return x, y
+
+    x0, y0, w, h = genericCoordinates('mutl/left_noright')
+    if x0 and y0 > 0:
+        x = x0 + 2*w/3
+        y = y0 + h/2
+        return x, y
+    print('No icon found')
+    return -1, -1
+
+
+def MCU_page_0():
+    x0, y0, w, h = genericCoordinates('mutl/mcua')
+    if x0 and y0 > 0:
+        x = x0 + w/2
+        y = y0 + h/2
+        return x, y
+
+def MU_page_0():
+    x0, y0, w, h = genericCoordinates('mutl/mua')
+    if x0 and y0 > 0:
+        x = x0 + w/2
+        y = y0 + h/2
+        return x, y
 
 # MUTL
 def calibration():
@@ -145,116 +203,61 @@ def calibrationOptional():
     return -1, -1
 
 
-def lastPage():
-    # only left
-    x0, y0, w, h = genericCoordinates('mutl/left_noright')
-    if x0 > 0 and y0 > 0:
-        y = y0 + h/2
-        x = x0 + w/4
-        return x, y
-    return -1, -1
-
-
-def firstPage():
-    x0, y0, w, h = genericCoordinates('mutl/right_noleft')
-    if x0 > 0 and y0 > 0:
-        y = y0 + h/2
-        x = x0 + (3*w/4)
-        return x, y
-    return -1, -1
-
-
-def midPage(side):
-    x0, y0, w, h = genericCoordinates('mutl/left_right')
-    if x0 > 0 and y0 > 0:
-        if side == 'left' and x0 > 0:
-            y = y0 + h / 2
-            x = x0 + w / 4
-            return x, y
-        if side == 'right' and x0 > 0:
-            y = y0 + h / 2
-            x = x0 + (3 * w / 4)
-            return x, y
-    return -1, -1
-
-
-def left():
-    x, y = lastPage()
-    if x > 0 and y > 0:
-        return x, y
-    x, y = midPage('left')
-    if x > 0 and y > 0:
-        return x, y
-    print('No icon found')
-    return -1, -1
-
-
-def right():
-    x, y = firstPage()
-    if x > 0 and y > 0:
-        return x, y
-    x, y = midPage('right')
-    if x > 0 and y > 0:
-        return x, y
-    print('No icon found')
-    return -1, -1
-
-
 
 #CALIBRATION MENU
 def offset():
-    return genericCoordinates('mutl/calib_offset')
+    return genericCoordinatesCenter('mutl/calib_offset')
 
 
 def defect():
-    return genericCoordinates('mutl/calib_defect')
+    return genericCoordinatesCenter('mutl/calib_defect')
 
 
 def defectSolid():
-    return genericCoordinates('mutl/calib_defect_solid')
+    return genericCoordinatesCenter('mutl/calib_defect_solid')
 
 
 def defectSolidStereo():
-    return genericCoordinates('mutl/calib_defect_solid_stereo')
+    return genericCoordinatesCenter('mutl/calib_defect_solid_stereo')
 
 
 def defectSolidBpy():
-    return genericCoordinates('mutl/calib_defect_solid_bpy')
+    return genericCoordinatesCenter('mutl/calib_defect_solid_bpy')
 
 
 def defectSolidTomo():
-    return genericCoordinates('mutl/calib_defect_solid_tomo')
+    return genericCoordinatesCenter('mutl/calib_defect_solid_tomo')
 
 
 def pixelDefect():
-    return genericCoordinates('mutl/calib_pixel_defect')
+    return genericCoordinatesCenter('mutl/calib_pixel_defect')
 
 
 def shading():
-    return genericCoordinates('mutl/calib_shading')
+    return genericCoordinatesCenter('mutl/calib_shading')
 
 
 def uniformity():
-    return genericCoordinates('mutl/calib_uniformity')
+    return genericCoordinatesCenter('mutl/calib_uniformity')
 
 
 def uniformityStereo():
-    return genericCoordinates('mutl/calib_uniformity_stereo')
+    return genericCoordinatesCenter('mutl/calib_uniformity_stereo')
 
 
 def uniformityBpy():
-    return genericCoordinates('mutl/calib_uniformity_bpy')
+    return genericCoordinatesCenter('mutl/calib_uniformity_bpy')
 
 
 def uniformityTomo():
-    return genericCoordinates('mutl/calib_uniformity_tomo')
+    return genericCoordinatesCenter('mutl/calib_uniformity_tomo')
 
 
 def uniformityES():
-    return genericCoordinates('mutl/calib_uniformity_es')
+    return genericCoordinatesCenter('mutl/calib_uniformity_es')
 
 
 def sensitivity():
-    return genericCoordinates('mutl/calib_sensitivity')
+    return genericCoordinatesCenter('mutl/calib_sensitivity')
 
 

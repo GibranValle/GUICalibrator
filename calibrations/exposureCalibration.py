@@ -1,11 +1,16 @@
 import time
 
-from util.delayManager import waitTillEnd, waitTillReady, createMessage, resetStopFlag, editOutput, getStopFlag
+from util.delayManager import waitTillEnd, waitTillReady, createMessage, resetStopFlag, editOutput, getStopFlag, editButton
 from util.serialCOM import communicate
 import customtkinter as ck
 
 
-def genericCalibration(name, exposures, label_output1, label_output2, duration=8):
+def genericCalibration(name, exposures, gui_object:ck.CTk = None, duration=8):
+
+    label_output1 = gui_object.label_output1
+    label_output2 = gui_object.label_output2
+    button = gui_object.button_run
+
     resetStopFlag()
     pause = 30
     total = 0
@@ -48,63 +53,70 @@ def genericCalibration(name, exposures, label_output1, label_output2, duration=8
     if name == 'single':
         text = 'Exposure completed!'
     editOutput(text, label_output2)
+    gui_object.isRunning = False
+    editButton('Start Calibration', button)
 
 
-def defectSolidCalib(label_output1, label_output2):
+
+def defectSolidCalib(gui_object):
     exposures = 1
-    genericCalibration('defect-solid', exposures, label_output1, label_output2)
+    genericCalibration('defect-solid', exposures, gui_object)
 
 
-def pixedDefectCalib(label_output1, label_output2):
+def pixedDefectCalib(gui_object):
     exposures = 1
-    genericCalibration('pixel-defect', exposures, label_output1, label_output2)
+    genericCalibration('pixel-defect', exposures, gui_object)
 
 
-def shadingCalib(label_output1, label_output2):
+def shadingCalib(gui_object):
     exposures = 44
-    genericCalibration('shading', exposures, label_output1, label_output2)
+    genericCalibration('shading', exposures, gui_object)
 
 
-def uniformityCalib(label_output1, label_output2):
+def uniformityCalib(gui_object):
     exposures = 7
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def defectSolidStereoCalib(label_output1, label_output2):
+def defectSolidStereoCalib(gui_object):
     exposures = 2
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def defectSolidBpyCalib(label_output1, label_output2):
+def defectSolidBpyCalib(gui_object):
     exposures = 4
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def defectSolidTomoCalib(label_output1, label_output2):
+def defectSolidTomoCalib(gui_object):
     exposures = 2
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibStereo(label_output1, label_output2):
+def uniformityCalibStereo(gui_object):
     exposures = 2
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibBpy(label_output1, label_output2):
+def uniformityCalibBpy(gui_object):
     exposures = 4
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibTomo(label_output1, label_output2):
+def uniformityCalibTomo(gui_object):
     exposures = 2
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibES(label_output1, label_output2):
+def uniformityCalibES(gui_object):
     exposures = 2
-    genericCalibration('uniformity', exposures, label_output1, label_output2)
+    genericCalibration('uniformity', exposures, gui_object)
 
 
 def singleShot(label1: ck.CTkLabel, label2: ck.CTkLabel):
     exposures = 1
+    genericCalibration('single', exposures, label1, label2, duration=15)
+
+def TeneShots(label1: ck.CTkLabel, label2: ck.CTkLabel):
+    exposures = 10
     genericCalibration('single', exposures, label1, label2, duration=15)

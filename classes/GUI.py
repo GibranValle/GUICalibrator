@@ -1,3 +1,5 @@
+import time
+
 import customtkinter
 import pyautogui
 
@@ -170,7 +172,7 @@ class App(customtkinter.CTk):
         self.submode = name
         self.clearLastmenu()
 
-        if name in m.iconFinder:
+        if self.mode == 'IconFinder':
             if name == 'AWS':
                 self.edit_last_menu(menu=m.icons_aws)
             elif name == 'RUPCTools':
@@ -181,6 +183,16 @@ class App(customtkinter.CTk):
                 self.edit_last_menu(menu=m.icons_calib)
             elif name == 'Calibration Opt':
                 self.edit_last_menu(menu=m.icons_calib_opt)
+
+        elif self.mode == 'Window':
+            if name == 'AWS':
+                self.edit_last_menu(menu=m.w_aws)
+            elif name == 'RUPCTools':
+                self.edit_last_menu(menu=m.w_ru)
+            elif name == 'MUTL MU':
+                self.edit_last_menu(menu=m.w_mutl)
+            elif name == 'MUTL MCU':
+                self.edit_last_menu(menu=m.w_mutl_mcu)
 
         elif name in m.window:
             self.edit_last_menu()
@@ -214,6 +226,7 @@ class App(customtkinter.CTk):
         self.button_serial.configure(text='Close serial port')
 
     def Exec(self):
+        print('BUTTON')
         if self.isRunning:
             setStopFlag()
             self.isRunning = False
@@ -230,27 +243,32 @@ class App(customtkinter.CTk):
             self.edit_button('Stop Exposure', error=True)
             Thread(target=singleShot, args=[self.label_output1, self.label_output2], daemon=True).start()
 
+        elif self.mode == '10 Shots':
+            self.isRunning = True
+            self.edit_button('Stop Exposure', error=True)
+            Thread(target=TeneShots, args=[self.label_output1, self.label_output2], daemon=True).start()
+
         elif self.mode == 'Basic':
 
             if self.submode == 'Defect-solid':
                 self.isRunning = True
                 self.edit_button('Stop Exposure', error=True)
-                Thread(target=defectSolidCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+                Thread(target=defectSolidCalib, args=[self], daemon=True).start()
 
             elif self.submode == 'Pixel-defect':
                 self.isRunning = True
                 self.edit_button('Stop Exposure', error=True)
-                Thread(target=pixedDefectCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+                Thread(target=pixedDefectCalib, args=[self], daemon=True).start()
 
             elif self.submode == 'Shading':
                 self.isRunning = True
                 self.edit_button('Stop Exposure', error=True)
-                Thread(target=shadingCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+                Thread(target=shadingCalib, args=[self], daemon=True).start()
 
             elif self.submode == 'X-ray uniformity':
                 self.isRunning = True
                 self.edit_button('Stop Exposure', error=True)
-                Thread(target=uniformityCalib, args=[self.label_output1, self.label_output2], daemon=True).start()
+                Thread(target=uniformityCalib, args=[self], daemon=True).start()
 
         elif self.mode == 'Stereo':
             pass
@@ -369,6 +387,7 @@ class App(customtkinter.CTk):
             elif self.option == 'Field calib button':
                 pyautogui.moveTo(calib_button(), duration=0.25)
                 pyautogui.click(calib_button())
+                time.sleep(0.25)
                 pyautogui.moveTo(fieldCalib(), duration=0.25)
                 pyautogui.click(fieldCalib())
 

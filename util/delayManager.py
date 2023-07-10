@@ -22,7 +22,6 @@ def genericCounter(label, init, final, minTime, breakCondition, text):
         time.sleep(1)
         if breakCondition() and secs >= minTime:
             return -2
-            break
         elif stopFlag:
             return -1
     return secs
@@ -44,7 +43,7 @@ def waitTillEnd(init, final, label: ck.CTkLabel):
 
 
 def waitTillReady(init, final, label: ck.CTkLabel):
-    minTime = 15
+    minTime = 5
     breakCondition = isStdBy
     text = 'Waiting for next'
     secs = genericCounter(label, init, final, minTime, breakCondition, text)
@@ -60,7 +59,7 @@ def waitTillStartYellow(final, label: ck.CTkLabel, init=0):
 
 
 def waitTillEndYellow(final, init, label: ck.CTkLabel):
-    minTime = 60 * 4
+    minTime = 60
     breakCondition = isExposureDone
     text = 'Wait for end'
     secs = genericCounter(label, init, final, minTime, breakCondition, text)
@@ -115,8 +114,12 @@ def resetStopFlag():
     stopFlag = False
 
 
-def editOutput(line2, label: ck.CTkLabel):
-    label.configure(text=line2)
+def editOutput(text, label: ck.CTkLabel):
+    label.configure(text=text)
+
+
+def editButton(text, button: ck.CTkButton):
+    button.configure(text=text, fg_color='#003366', hover_color='#002255')
 
 
 def createMessage(msg, count):

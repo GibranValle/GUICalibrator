@@ -39,31 +39,14 @@ def closeMUTL():
 
 def openCalibrationMenu():
     openMUTLMCU()
-
-    # is first page????
-    x, y = loc.firstPage()
-    if x < 0 and y < 0:
-        x, y = loc.calibration()
+    # is MCU FIRST PAGE?
+    x, y = loc.MCU_page_0()
+    if x > 0 and y > 0:
+        # NO FIRST PAGE, CHANGE TO NEXT
+        x, y = loc.right()
         if x > 0 and y > 0:
             pyautogui.moveTo(x, y, duration=0.5)
             pyautogui.click(x, y)
-            return
-
-    x, y = loc.right()
-    if x > 0 and y > 0:
-        pyautogui.moveTo(x, y, duration=0.5)
-        pyautogui.click(x, y)
-
-    x, y = loc.calibration()
-    if x > 0 and y > 0:
-        pyautogui.moveTo(x, y, duration=0.5)
-        pyautogui.click(x, y)
-        return
-
-    x, y = loc.right()
-    if x > 0 and y > 0:
-        pyautogui.moveTo(x, y, duration=0.5)
-        pyautogui.click(x, y)
 
     x, y = loc.calibration()
     if x > 0 and y > 0:
@@ -74,31 +57,14 @@ def openCalibrationMenu():
 
 def openCalibrationOptMenu():
     openMUTLMCU()
-
-    # is first page????
-    x, y = loc.firstPage()
-    if x < 0 and y < 0:
-        x, y = loc.calibrationOptional()
+    # is MCU FIRST PAGE?
+    x, y = loc.MCU_page_0()
+    if x > 0 and y > 0:
+        # NO FIRST PAGE, CHANGE TO NEXT
+        x, y = loc.right()
         if x > 0 and y > 0:
             pyautogui.moveTo(x, y, duration=0.5)
             pyautogui.click(x, y)
-            return
-
-    x, y = loc.right()
-    if x > 0 and y > 0:
-        pyautogui.moveTo(x, y, duration=0.5)
-        pyautogui.click(x, y)
-
-    x, y = loc.calibrationOptional()
-    if x > 0 and y > 0:
-        pyautogui.moveTo(x, y, duration=0.5)
-        pyautogui.click(x, y)
-        return
-
-    x, y = loc.right()
-    if x > 0 and y > 0:
-        pyautogui.moveTo(x, y, duration=0.5)
-        pyautogui.click(x, y)
 
     x, y = loc.calibrationOptional()
     if x > 0 and y > 0:
@@ -109,7 +75,7 @@ def openCalibrationOptMenu():
 
 
 def startOffsetCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.offset()
     if x <= 0 and y <= 0:
         return
@@ -118,7 +84,7 @@ def startOffsetCalib():
 
 
 def startDefectCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.defect()
     if x <= 0 and y <= 0:
         return
@@ -127,7 +93,7 @@ def startDefectCalib():
 
 
 def startDefectSolidCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.defectSolid()
     if x <= 0 and y <= 0:
         return
@@ -136,7 +102,7 @@ def startDefectSolidCalib():
 
 
 def startPixelDefectCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.pixelDefect()
     if x <= 0 and y <= 0:
         return
@@ -145,7 +111,7 @@ def startPixelDefectCalib():
 
 
 def startShadingCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.shading()
     if x <= 0 and y <= 0:
         return
@@ -154,7 +120,7 @@ def startShadingCalib():
 
 
 def startUniformityCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.shading()
     if x <= 0 and y <= 0:
         return
@@ -163,7 +129,7 @@ def startUniformityCalib():
 
 
 def startDefectSolidStereoCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.defectSolidStereo()
     if x <= 0 and y <= 0:
         return
@@ -172,7 +138,7 @@ def startDefectSolidStereoCalib():
 
 
 def startDefectSolidBpyCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.defectSolidBpy()
     if x <= 0 and y <= 0:
         return
@@ -181,7 +147,7 @@ def startDefectSolidBpyCalib():
 
 
 def startDefectSolidTomoCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.defectSolidTomo()
     if x <= 0 and y <= 0:
         return
@@ -190,7 +156,7 @@ def startDefectSolidTomoCalib():
 
 
 def startUniformityStereoCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.offset()
     if x <= 0 and y <= 0:
         return
@@ -199,7 +165,7 @@ def startUniformityStereoCalib():
 
 
 def startUniformityBpyCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.uniformityBpy()
     if x <= 0 and y <= 0:
         return
@@ -208,7 +174,7 @@ def startUniformityBpyCalib():
 
 
 def startUniformityTomoCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.uniformityTomo()
     if x <= 0 and y <= 0:
         return
@@ -217,7 +183,7 @@ def startUniformityTomoCalib():
 
 
 def startUniformityESCalib():
-    openCalibrationMenuMouse()
+    openCalibrationMenu()
     x, y = loc.uniformityES()
     if x <= 0 and y <= 0:
         return
