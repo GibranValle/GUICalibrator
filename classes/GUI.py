@@ -134,12 +134,15 @@ class App(customtkinter.CTk):
         self.menu_2.place_forget()
         self.textBoxOutput.place_forget()
         self.label_output1.place_forget()
-        self.label_output1.place_forget()
+        self.label_output2.place_forget()
 
     def clearLastmenu(self):
         self.button_run.place_forget()
         self.label_3.place_forget()
         self.menu_3.place_forget()
+        self.label_output1.configure(text='')
+        self.label_output2.configure(text='')
+
 
     # --------------------------------------------------------- HANDLE EVENTS ----------------------------------------------------------------------
     def mode_changed(self, name: str):
@@ -199,6 +202,7 @@ class App(customtkinter.CTk):
 
         elif self.mode in m.with_submenu:
             self.edit_button('Start calibration')
+
 
     def lastmenu_changed(self, name: str):
         print('last menu changed')
