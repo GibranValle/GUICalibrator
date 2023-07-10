@@ -21,7 +21,7 @@ def genericCounter(label, init, final, minTime, breakCondition, text):
         editOutput(message, label)
         time.sleep(1)
         if breakCondition() and secs >= minTime:
-            return -2
+            return secs
         elif stopFlag:
             return -1
     return secs
@@ -59,7 +59,7 @@ def waitTillStartYellow(final, label: ck.CTkLabel, init=0):
 
 
 def waitTillEndYellow(final, init, label: ck.CTkLabel):
-    minTime = 60
+    minTime = 20
     breakCondition = isExposureDone
     text = 'Wait for end'
     secs = genericCounter(label, init, final, minTime, breakCondition, text)
@@ -70,7 +70,6 @@ def waitTillEndYellow(final, init, label: ck.CTkLabel):
 
 def isStdBy():
     x, y = stdbyIcon()
-    print(x, y)
     if x > 0 and y > 0:
         return True
     return False
@@ -78,7 +77,6 @@ def isStdBy():
 
 def isBlocked():
     x, y = blockedIcon()
-    print(x, y)
     if x > 0 and y > 0:
         return True
     return False
@@ -86,7 +84,6 @@ def isBlocked():
 
 def isExposureDone():
     x, y = isExposing()
-    print(x, y)
     if x > 0 and y > 0:
         return False
     return True
@@ -94,7 +91,6 @@ def isExposureDone():
 
 def isExposureNotDone():
     x, y = isExposing()
-    print(x, y)
     if x > 0 and y > 0:
         return True
     return False

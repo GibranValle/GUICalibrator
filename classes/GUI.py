@@ -28,6 +28,8 @@ class App(customtkinter.CTk):
         self.mode = ''
         self.submode = ''
         self.option = ''
+        # Make the window jump above all
+        self.attributes('-topmost', True)
 
         self.geometry("400x500")
         self.title("FPD Calibration bot")
