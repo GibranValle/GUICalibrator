@@ -240,17 +240,17 @@ class App(customtkinter.CTk):
         if self.mode == 'mA Full':
             self.isRunning = True
             self.edit_button('Stop Exposure', error=True)
-            Thread(target=mAFullCalibration, args=[self.label_output1, self.label_output2], daemon=True).start()
+            Thread(target=mAFullCalibration, args=[self], daemon=True).start()
 
         elif self.mode == 'Single shot':
             self.isRunning = True
             self.edit_button('Stop Exposure', error=True)
-            Thread(target=singleShot, args=[self.label_output1, self.label_output2], daemon=True).start()
+            Thread(target=singleShot, args=[self], daemon=True).start()
 
         elif self.mode == '10 Shots':
             self.isRunning = True
             self.edit_button('Stop Exposure', error=True)
-            Thread(target=TeneShots, args=[self.label_output1, self.label_output2], daemon=True).start()
+            Thread(target=TenShots, args=[self], daemon=True).start()
 
         elif self.mode == 'Basic':
 

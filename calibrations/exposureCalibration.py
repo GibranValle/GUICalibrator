@@ -58,65 +58,65 @@ def genericCalibration(name, exposures, gui_object:ck.CTk = None, duration=8):
 
 
 
-def defectSolidCalib(gui_object):
+def defectSolidCalib(gui_object:ck.CTk = None):
     exposures = 1
     genericCalibration('defect-solid', exposures, gui_object)
 
 
-def pixedDefectCalib(gui_object):
+def pixedDefectCalib(gui_object:ck.CTk = None):
     exposures = 1
     genericCalibration('pixel-defect', exposures, gui_object)
 
 
-def shadingCalib(gui_object):
+def shadingCalib(gui_object:ck.CTk = None):
     exposures = 44
     genericCalibration('shading', exposures, gui_object)
 
 
-def uniformityCalib(gui_object):
+def uniformityCalib(gui_object:ck.CTk = None):
     exposures = 7
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def defectSolidStereoCalib(gui_object):
+def defectSolidStereoCalib(gui_object:ck.CTk = None):
     exposures = 2
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def defectSolidBpyCalib(gui_object):
+def defectSolidBpyCalib(gui_object:ck.CTk = None):
     exposures = 4
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def defectSolidTomoCalib(gui_object):
+def defectSolidTomoCalib(gui_object:ck.CTk = None):
     exposures = 2
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibStereo(gui_object):
+def uniformityCalibStereo(gui_object:ck.CTk = None):
     exposures = 2
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibBpy(gui_object):
+def uniformityCalibBpy(gui_object:ck.CTk = None):
     exposures = 4
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibTomo(gui_object):
+def uniformityCalibTomo(gui_object:ck.CTk = None):
     exposures = 2
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def uniformityCalibES(gui_object):
+def uniformityCalibES(gui_object:ck.CTk = None):
     exposures = 2
     genericCalibration('uniformity', exposures, gui_object)
 
 
-def singleShot(label1: ck.CTkLabel, label2: ck.CTkLabel):
+def singleShot(gui_object:ck.CTk = None):
     exposures = 1
-    genericCalibration('single', exposures, label1, label2, duration=15)
+    genericCalibration('single', exposures, gui_object, duration=15)
 
-def TeneShots(label1: ck.CTkLabel, label2: ck.CTkLabel):
+def TenShots(gui_object:ck.CTk = None):
     exposures = 10
-    genericCalibration('single', exposures, label1, label2, duration=15)
+    genericCalibration('single', exposures, gui_object, duration=15)

@@ -2,7 +2,11 @@ from util.delayManager import waitTillEndYellow, waitTillStartYellow, countdown,
 import customtkinter as ck
 from util.serialCOM import communicate
 
-def mAFullCalibration(label1: ck.CTkLabel, label2: ck.CTkLabel):
+def mAFullCalibration(gui_object:ck.CTk = None):
+    label1 = gui_object.label_output1
+    label2 = gui_object.label_output2
+    button = gui_object.button_run
+
     resetStopFlag()
     total = 0
     label1.configure(text='')
@@ -41,3 +45,5 @@ def mAFullCalibration(label1: ck.CTkLabel, label2: ck.CTkLabel):
     label1.configure(text='Calculation done!')
     text = createMessage('This calib took', total)
     label1.configure(text=text)
+    editButton('Start Exposure', button)
+
