@@ -1,16 +1,18 @@
-import time
-
 import customtkinter
-import pyautogui
 
 import util.serialCOM as com
+from shell.network.network import *
+from shell.process_MUTL_MCU import *
+from shell.process import *
 from util import menu_list as m
 from threading import Thread
 from calibrations.maFullCalib import mAFullCalibration
 from util.delayManager import setStopFlag
 from calibrations.exposureCalibration import *
-from util.location import *
-import shell.process as pro
+from util.location.location import *
+from util.location.location_AWS import *
+from util.location.location_MUTL import *
+from util.location.location_MUTL_MCU import *
 
 # theme settings
 customtkinter.set_appearance_mode("dark")
@@ -41,9 +43,11 @@ class App(customtkinter.CTk):
         # serial
         self.frame1 = customtkinter.CTkFrame(master=self, height=60, fg_color="#353535")
         self.frame1.pack(pady=10, padx=10, fill='both')
-        self.label_serial = customtkinter.CTkLabel(master=self.frame1, font=self.font_title, text_color='red', text='Offline')
+        self.label_serial = customtkinter.CTkLabel(master=self.frame1, font=self.font_title, text_color='red',
+                                                   text='Offline')
         self.label_serial.place(relx=0.1, rely=0.25)
-        self.button_serial = customtkinter.CTkButton(master=self.frame1, command=self.connectButton, font=self.font_text, text='Open serial port', height=40)
+        self.button_serial = customtkinter.CTkButton(master=self.frame1, command=self.connectButton,
+                                                     font=self.font_text, text='Open serial port', height=40)
         self.button_serial.place(relx=0.45, rely=0.175)
 
         # MAIN MENU
@@ -52,17 +56,21 @@ class App(customtkinter.CTk):
         self.label_1.configure(text='Select Mode:')
         self.label_1.place(relx=0.1, rely=0.20)
         # ROW 2
-        self.menu_1 = customtkinter.CTkOptionMenu(master=self, values=m.mode, font=self.font_text, command=self.mode_changed, width=200, height=40)
+        self.menu_1 = customtkinter.CTkOptionMenu(master=self, values=m.mode, font=self.font_text,
+                                                  command=self.mode_changed, width=200, height=40)
         self.menu_1.set('Select: ')
         self.menu_1.place(relx=0.1, rely=0.25)
 
         self.label_2 = customtkinter.CTkLabel(master=self, font=self.font_text)
-        self.menu_2 = customtkinter.CTkOptionMenu(master=self, font=self.font_text, command=self.submenu_changed, width=200, height=40)
+        self.menu_2 = customtkinter.CTkOptionMenu(master=self, font=self.font_text, command=self.submenu_changed,
+                                                  width=200, height=40)
 
-        self.textBoxOutput = customtkinter.CTkTextbox(master=self, font=self.font_output, state='normal', width=320, height=120)
+        self.textBoxOutput = customtkinter.CTkTextbox(master=self, font=self.font_output, state='normal', width=320,
+                                                      height=120)
 
         self.label_3 = customtkinter.CTkLabel(master=self, font=self.font_text)
-        self.menu_3 = customtkinter.CTkOptionMenu(master=self, font=self.font_text, command=self.lastmenu_changed, width=200, height=40)
+        self.menu_3 = customtkinter.CTkOptionMenu(master=self, font=self.font_text, command=self.lastmenu_changed,
+                                                  width=200, height=40)
 
         self.button_run = customtkinter.CTkButton(master=self, command=self.Exec, font=self.font_text,
                                                   fg_color='#003366', hover_color='#002255', height=50, width=200)
@@ -145,7 +153,6 @@ class App(customtkinter.CTk):
         self.label_output1.configure(text='')
         self.label_output2.configure(text='')
 
-
     # --------------------------------------------------------- HANDLE EVENTS ----------------------------------------------------------------------
     def mode_changed(self, name: str):
         self.mode = name
@@ -184,6 +191,8 @@ class App(customtkinter.CTk):
                 self.edit_last_menu(menu=m.icons_RU)
             elif name == 'MUTL MU':
                 self.edit_last_menu(menu=m.icons_mutl)
+            elif name == 'MUTL MCU':
+                self.edit_last_menu(menu=m.icons_mutl_mcu)
             elif name == 'Calibration':
                 self.edit_last_menu(menu=m.icons_calib)
             elif name == 'Calibration Opt':
@@ -205,7 +214,6 @@ class App(customtkinter.CTk):
         elif self.mode in m.with_submenu:
             self.edit_button('Start calibration')
 
-
     def lastmenu_changed(self, name: str):
         print('last menu changed')
         self.option = name
@@ -225,7 +233,7 @@ class App(customtkinter.CTk):
             self.label_serial.configure(text_color='red', text='Offline')
             return
 
-        serialThread = threading.Thread(target=com.startListening)
+        serialThread = Thread(target=com.startListening)
         serialThread.start()
         time.sleep(1.5)
         self.label_serial.configure(text_color='green', text='Online')
@@ -253,6 +261,15 @@ class App(customtkinter.CTk):
             self.isRunning = True
             self.edit_button('Stop Exposure', error=True)
             Thread(target=TenShots, args=[self], daemon=True).start()
+
+        elif self.mode == 'Save MAC':
+            macs = saveMACs()
+            self.textBoxOutput.insert(index=0.0, text=macs)
+
+        elif self.mode == 'Create WOL file':
+            createWOLsetupFile('Ethernet')
+            text = 'Please copy file manually to:\nC:/Program Files(x86)/Fujifilm/WOL'
+            self.textBoxOutput.insert(index=0.0, text=text)
 
         elif self.mode == 'Basic':
 
@@ -286,7 +303,7 @@ class App(customtkinter.CTk):
             pass
 
         elif self.mode == 'IconFinder':
-            print('ICON FINDER')
+            print(self.option)
             if self.option == 'Stand by':
                 pyautogui.moveTo(stdbyIcon(), duration=0.5)
 
@@ -320,20 +337,26 @@ class App(customtkinter.CTk):
             elif self.option == 'calibration (opt)':
                 pyautogui.moveTo(calibrationOptional(), duration=0.5)
 
+            elif self.option == 'calibration (MU)':
+                pyautogui.moveTo(calibration_MU(), duration=0.5)
+
+            elif self.option == 'Generator Check':
+                pyautogui.moveTo(generator_MU(), duration=0.5)
+
             elif self.option == 'left':
                 pyautogui.moveTo(left(), duration=0.5)
 
             elif self.option == 'right':
                 pyautogui.moveTo(right(), duration=0.5)
 
-            elif self.option == 'Enable HLV':
-                pyautogui.moveTo(calibration(), duration=0.5)
+            elif self.option == 'Toggle HVL':
+                pyautogui.moveTo(toggle_HVL(), duration=0.5)
 
-            elif self.option == 'Enable MAG':
-                pyautogui.moveTo(calibration(), duration=0.5)
+            elif self.option == 'Toggle MAG':
+                pyautogui.moveTo(toggle_MAG(), duration=0.5)
 
             elif self.option == 'Enable Ment Mode':
-                pyautogui.moveTo(calibration(), duration=0.5)
+                pyautogui.moveTo(enable_ment(), duration=0.5)
 
             elif self.option == 'offset':
                 pyautogui.moveTo(offset(), duration=0.5)
@@ -389,76 +412,86 @@ class App(customtkinter.CTk):
             elif self.option == 'Calib button':
                 pyautogui.moveTo(calib_button(), duration=0.5)
                 pyautogui.click(calib_button())
+                time.sleep(0.25)
+                pyautogui.click(calib_button())
 
             elif self.option == 'Field calib button':
                 pyautogui.moveTo(calib_button(), duration=0.25)
+                pyautogui.click(calib_button())
+                time.sleep(0.25)
                 pyautogui.click(calib_button())
                 time.sleep(0.25)
                 pyautogui.moveTo(fieldCalib(), duration=0.25)
                 pyautogui.click(fieldCalib())
 
             elif self.option == 'Open RU':
-                pro.openRU()
+                openRU()
 
             elif self.option == 'Close RU':
-                pro.closeRU()
+                closeRU()
 
             elif self.option == 'Open MUTL MU':
-                pro.openMUTLMU()
+                openMUTLMU()
 
             elif self.option == 'Open MUTL MCU':
-                pro.openMUTLMCU()
+                openMUTLMCU()
 
             elif self.option == 'Close MUTL':
-                pro.closeMUTL()
+                closeMUTL()
 
-            elif self.option == 'Enable HVL':
-                pro.openMUTLMU()
+            elif self.option == 'Toggle HVL':
+                openCalibrationMUMenu()
+                pyautogui.moveTo(toggle_HVL(), duration=0.25)
+                pyautogui.click(toggle_HVL())
 
-            elif self.option == 'Enable MAG':
-                pro.openMUTLMU()
+            elif self.option == 'Toggle MAG':
+                openCalibrationMUMenu()
+                pyautogui.moveTo(toggle_MAG(), duration=0.25)
+                pyautogui.click(toggle_MAG())
 
             elif self.option == 'Enable Ment Mode':
-                pro.openMUTLMU()
+                openGeneratorMUMenu()
+                pyautogui.moveTo(enable_ment(), duration=0.25)
+                pyautogui.click(enable_ment())
 
             elif 'offset' in self.option:
-                pro.startOffsetCalib()
+                startOffsetCalib()
 
             elif 'defect' in self.option:
-                pro.startDefectCalib()
+                startDefectCalib()
 
             elif 'defect solid' in self.option:
-                pro.startDefectCalib()
+                startDefectCalib()
 
             elif 'pixel defect' in self.option:
-                pro.startPixelDefectCalib()
+                startPixelDefectCalib()
 
             elif 'shading' in self.option:
-                pro.startShadingCalib()
+                startShadingCalib()
 
             elif 'uniformity' in self.option:
-                pro.startUniformityCalib()
+                startUniformityCalib()
 
             elif 'defect solid stereo' in self.option:
-                pro.startDefectSolidCalib()
+                startDefectSolidCalib()
 
             elif 'defect solid biopsy' in self.option:
-                pro.startDefectSolidBpyCalib()
+                startDefectSolidBpyCalib()
 
             elif 'defect solid tomo' in self.option:
-                pro.startDefectSolidTomoCalib()
+                startDefectSolidTomoCalib()
 
             elif 'x-ray uniformity stereo' in self.option:
-                pro.startUniformityStereoCalib()
+                startUniformityStereoCalib()
 
             elif 'x-ray uniformity biopsy' in self.option:
-                pro.startUniformityBpyCalib()
+                startUniformityBpyCalib()
 
             elif 'x-ray uniformity tomo' in self.option:
-                pro.startUniformityTomoCalib()
+                startUniformityTomoCalib()
 
             elif 'x-ray uniformity ES' in self.option:
-                pro.startUniformityESCalib()
+                startUniformityESCalib()
 
     def editLabel1(self, text=''):
         self.label_2.configure(text=text)

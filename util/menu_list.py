@@ -1,5 +1,3 @@
-#      0             1                  2         3         4                       5                      6            7          8           9
-# mode = 'ma Full', 'Single shot', 'Save MAC', 'Create WOL file', 'Basic', 'Stereo', 'TOMO', 'ES', 'IconFinder', 'Window'
 only_menu = 'mA Full', 'Single shot', '10 Shots'
 with_output = 'Save MAC', 'Create WOL file'
 with_submenu = 'Basic', 'Stereo', 'Tomo', 'ES',
@@ -17,12 +15,11 @@ tomo = 'Defect-solid (Tomo)', 'X-ray uniformity (Tomo)'
 es = ['X-ray uniformity (ES)']
 iconFinder = 'AWS', 'RUPCTools', 'MUTL MU', 'MUTL MCU', 'Calibration', 'Calibration Opt'
 
-
 # options
 icons_aws = 'Stand by', 'Blocked', 'Ok red', 'Calib button', 'Field calib button'
 icons_RU = 'MU0', 'MCU0', 'New', 'Install'
+icons_mutl = 'calibration (MU)', 'Generator Check', 'Toggle MAG', 'Toggle HVL', 'Enable Ment Mode'
 icons_mutl_mcu = 'calibration', 'calibration (opt)', 'left', 'right',
-icons_mutl = 'calibration', 'left', 'right', 'Enable HLV', 'Enable MAG', 'Enable Ment Mode'
 icons_calib = 'offset', 'defect', 'defect solid', 'pixel defect', 'shading', 'uniformity'  # 'sensitivity'
 icons_calib_opt = 'defect solid stereo', 'defect solid biopsy', 'defect solid tomo', 'x-ray uniformity stereo', \
     'x-ray uniformity biopsy', 'x-ray uniformity tomo', 'x-ray uniformity ES'

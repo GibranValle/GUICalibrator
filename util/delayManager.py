@@ -1,9 +1,8 @@
 import time
-import threading as th
-import sys
-from util.location import blockedIcon, stdbyIcon, isExposing
-from multiprocessing.pool import ThreadPool
 import customtkinter as ck
+
+from util.location.location import isExposing
+from util.location.location_AWS import stdbyIcon, blockedIcon
 
 stopFlag = False
 

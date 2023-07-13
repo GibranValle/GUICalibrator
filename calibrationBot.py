@@ -1,7 +1,4 @@
-import util.serialCOM as com
-import shell.process as pro
 from classes.GUI import App
-import customtkinter
 
 
 def main():
