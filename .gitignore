@@ -13,3 +13,6 @@ build/
 
 # does not ignore the README.md file
 !README.md
+
+#ignore all .spec files
+.spec
