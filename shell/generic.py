@@ -3,7 +3,7 @@ from time import sleep
 import win32gui as w
 import win32con as c
 from pyautogui import moveTo, click
-
+import os
 
 def changeWindow(name):
     def handler(hwnd, active):
@@ -43,7 +43,7 @@ def openApp(appName):
 
 
 def closeApp(appName):
-    if _process_exists(appName):
+    if process_exists(appName):
         subprocess.call(["taskkill", "/F", "/IM", appName],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         sleep(0.5)
@@ -63,7 +63,7 @@ def _scanWindows():
     file.close()
 
 
-def _process_exists(process_name):
+def process_exists(process_name):
     call = 'TASKLIST', '/FI', 'imagename eq %s' % process_name
     # use build-in check_output right away
     output = subprocess.check_output(call)
@@ -75,3 +75,11 @@ def _process_exists(process_name):
     # print(last_line)
     # because Fail message could be translated
     return last_line.lower().startswith(process_name.lower())
+
+
+def copyFile(origin, destiny):
+    dir = os.getcwd()
+    print(dir)
+    call = f'Xcopy {dir}\\{origin} {destiny} /R /S /Y /Q'
+    output = subprocess.check_output(call, shell=True)
+    print(output)

@@ -1,4 +1,4 @@
-from generic import changeWindow, openApp, closeApp
+from shell.generic import openApp, process_exists, closeApp, changeWindow
 
 def openRU():
     if process_exists('RuPcTool.exe'):

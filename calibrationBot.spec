@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
-datas = [('img', 'img'), ('img\\aws', 'img\\aws'), ('img\\aws', 'img\\aws'), ('img\\ff', 'img\\ff'), ('img\\mutl', 'img\\mutl'), ('img\\ru', 'img\\ru')]
+datas = []
 binaries = []
 hiddenimports = []
 tmp_ret = collect_all('customtkinter')
@@ -42,7 +42,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,
+    console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

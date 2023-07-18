@@ -1,8 +1,7 @@
 import time
 import customtkinter as ck
 
-from util.location.generic import isExposing
-from util.location.AWS import stdbyIcon, blockedIcon
+from util.location.AWS import stdbyIcon, blockedIcon, isExposing
 
 stopFlag = False
 

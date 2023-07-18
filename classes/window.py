@@ -2,27 +2,44 @@ from pyautogui import moveTo, click
 from shell.MCU import *
 from util.location.MUTL import *
 from util.location.MUTL_MCU import *
+from util.location.AWS import *
+from shell.generic import *
+from shell.RU import *
+from shell.MCU import *
+from shell.MU import *
+from time import sleep
+
+
+def _moveNclick(x, y):
+    if x > 0 and y > 0:
+        moveTo(x, y, duration=0.5)
+        click(x, y)
+        sleep(0.25)
+
+
+def _moveN2Click(x, y):
+    if x > 0 and y > 0:
+        moveTo(x, y, duration=0.5)
+        click(x, y)
+        sleep(0.25)
+        click(x, y)
 
 
 def windowOptions(option):
     if option == 'Ok red':
-        moveTo(okExposure(), duration=0.5)
-        click(okExposure())
+        x, y = okExposure()
+        _moveNclick(x, y)
 
     elif option == 'Calib button':
-        moveTo(calib_button(), duration=0.5)
-        click(calib_button())
-        time.sleep(0.25)
-        click(calib_button())
+        x, y = calib_button()
+        _moveN2Click(x, y)
 
     elif option == 'Field calib button':
-        moveTo(calib_button(), duration=0.25)
-        click(calib_button())
-        time.sleep(0.25)
-        click(calib_button())
-        time.sleep(0.25)
-        moveTo(fieldCalib(), duration=0.25)
-        click(fieldCalib())
+        x, y = calib_button()
+        _moveN2Click(x, y)
+
+        x, y = fieldCalib()
+        _moveNclick(x, y)
 
     elif option == 'Open RU':
         openRU()
@@ -41,18 +58,18 @@ def windowOptions(option):
 
     elif option == 'Toggle HVL':
         openCalibrationMUMenu()
-        moveTo(toggle_HVL(), duration=0.25)
-        click(toggle_HVL())
+        x, y = toggle_HVL()
+        _moveNclick(x, y)
 
     elif option == 'Toggle MAG':
         openCalibrationMUMenu()
-        moveTo(toggle_MAG(), duration=0.25)
-        click(toggle_MAG())
+        x, y = toggle_MAG()
+        _moveNclick(x, y)
 
     elif option == 'Enable Ment Mode':
         openGeneratorMUMenu()
-        moveTo(enable_ment(), duration=0.25)
-        click(enable_ment())
+        x, y = enable_ment()
+        _moveNclick(x, y)
 
     elif 'offset' in option:
         startOffsetCalib()

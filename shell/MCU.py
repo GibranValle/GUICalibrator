@@ -1,11 +1,11 @@
 from pyautogui import moveTo, click
-from shell.generic import _process_exists, changeWindow, openApp
+from shell.generic import openApp, process_exists, closeApp, changeWindow
 from util.location.MUTL import *
 from util.location.MUTL_MCU import *
 
 
 def openMUTLMCU():
-    if _process_exists('MUTL.exe'):
+    if process_exists('MUTL.exe'):
         return changeWindow('MCU0')
     openApp('MCU')
 

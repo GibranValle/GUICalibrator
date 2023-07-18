@@ -16,13 +16,18 @@ from classes.window import windowOptions
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
+HEIGHT_1 = 50
+HEIGHT_2 = 40
+HEIGHT_3 = 30
+WIDTH_1 = 240
+WIDTH_2 = 180
 
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-        self.font_title = ("Consolas", 25, 'bold')
-        self.font_text = ("Consolas", 20)
-        self.font_output = ("Consolas", 14)
+        self.font_title = ("Consolas", 18, 'bold')
+        self.font_text = ("Consolas", 16)
+        self.font_output = ("Consolas", 13)
         self.isRunning = False
         self.index = -1
         self.mode = ''
@@ -31,7 +36,7 @@ class App(customtkinter.CTk):
         # Make the window jump above all
         self.attributes('-topmost', True)
 
-        self.geometry("400x500")
+        self.geometry("300x400")
         self.title("FPD Calibration bot")
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -39,39 +44,39 @@ class App(customtkinter.CTk):
         # ------------------------------------------------------------ COMPONENTS ------------------------------------------------------------------------
 
         # serial
-        self.frame1 = customtkinter.CTkFrame(master=self, height=60, fg_color="#353535")
+        self.frame1 = customtkinter.CTkFrame(master=self, height=HEIGHT_1, fg_color="#353535")
         self.frame1.pack(pady=10, padx=10, fill='both')
         self.label_serial = customtkinter.CTkLabel(master=self.frame1, font=self.font_title, text_color='red',
                                                    text='Offline')
-        self.label_serial.place(relx=0.1, rely=0.25)
+        self.label_serial.place(relx=0.05, rely=0.25)
         self.button_serial = customtkinter.CTkButton(master=self.frame1, command=self.connectButton,
-                                                     font=self.font_text, text='Open serial port', height=40)
-        self.button_serial.place(relx=0.45, rely=0.175)
+                                                     font=self.font_text, text='Open serial port', height=HEIGHT_3)
+        self.button_serial.place(relx=0.40, rely=0.175)
 
         # MAIN MENU
         # ROW 1
         self.label_1 = customtkinter.CTkLabel(master=self, font=self.font_text)
         self.label_1.configure(text='Select Mode:')
-        self.label_1.place(relx=0.1, rely=0.20)
+        self.label_1.place(relx=0.1, rely=0.18)
         # ROW 2
         self.menu_1 = customtkinter.CTkOptionMenu(master=self, values=m.mode, font=self.font_text,
-                                                  command=self.mode_changed, width=200, height=40)
+                                                  command=self.mode_changed, width=WIDTH_2, height=HEIGHT_3)
         self.menu_1.set('Select: ')
         self.menu_1.place(relx=0.1, rely=0.25)
 
         self.label_2 = customtkinter.CTkLabel(master=self, font=self.font_text)
         self.menu_2 = customtkinter.CTkOptionMenu(master=self, font=self.font_text, command=self.submenu_changed,
-                                                  width=200, height=40)
+                                                  width=WIDTH_2, height=HEIGHT_3)
 
-        self.textBoxOutput = customtkinter.CTkTextbox(master=self, font=self.font_output, state='normal', width=320,
+        self.textBoxOutput = customtkinter.CTkTextbox(master=self, font=self.font_output, state='normal', width=WIDTH_1,
                                                       height=120)
 
         self.label_3 = customtkinter.CTkLabel(master=self, font=self.font_text)
         self.menu_3 = customtkinter.CTkOptionMenu(master=self, font=self.font_text, command=self.lastmenu_changed,
-                                                  width=200, height=40)
+                                                  width=WIDTH_2, height=HEIGHT_3)
 
         self.button_run = customtkinter.CTkButton(master=self, command=self.Exec, font=self.font_text,
-                                                  fg_color='#003366', hover_color='#002255', height=50, width=200)
+                                                  fg_color='#003366', hover_color='#002255', height=HEIGHT_2, width=WIDTH_2)
 
         self.label_output1 = customtkinter.CTkLabel(master=self, font=self.font_text)
         self.label_output2 = customtkinter.CTkLabel(master=self, font=self.font_text)
@@ -86,7 +91,7 @@ class App(customtkinter.CTk):
 
     def edit_submenu(self, submenu='Basic'):
         # ROW 3
-        self.label_2.place(relx=0.1, rely=0.40)
+        self.label_2.place(relx=0.1, rely=0.38)
         # ROW 4
         self.menu_2.set('Select: ')
         self.menu_2.place(relx=0.1, rely=0.45)
@@ -117,7 +122,7 @@ class App(customtkinter.CTk):
     def edit_last_menu(self, menu):
         # ROW 5
         self.label_3.configure(text='Icon: ')
-        self.label_3.place(relx=0.1, rely=0.60)
+        self.label_3.place(relx=0.1, rely=0.58)
         label2 = self.label_3
         # ROW 6
         self.menu_3.set('Select: ')
@@ -130,7 +135,7 @@ class App(customtkinter.CTk):
             self.button_run.configure(text=text, fg_color='#003366', hover_color='#002255')
         else:
             self.button_run.configure(text=text, fg_color='#880015', hover_color='#6E0011')
-        self.button_run.place(relx=0.25, rely=0.8)
+        self.button_run.place(relx=0.20, rely=0.8)
 
     # ---------------------- CLEAR----------------
     def clearAll(self):
@@ -159,7 +164,7 @@ class App(customtkinter.CTk):
         if name in m.only_menu:
             self.edit_button(text='Start exposure')
             self.label_output1.configure(text='')
-            self.label_output1.place(relx=0.1, rely=0.55)
+            self.label_output1.place(relx=0.1, rely=0.5)
             self.label_output2.configure(text='')
             self.label_output2.place(relx=0.1, rely=0.60)
 
@@ -170,7 +175,7 @@ class App(customtkinter.CTk):
         elif name in m.with_submenu:
             self.edit_submenu(name)
             self.label_output1.configure(text='')
-            self.label_output1.place(relx=0.1, rely=0.55)
+            self.label_output1.place(relx=0.1, rely=0.5)
             self.label_output2.configure(text='')
             self.label_output2.place(relx=0.1, rely=0.60)
 
@@ -220,8 +225,9 @@ class App(customtkinter.CTk):
         serialThread = Thread(target=com.startListening)
         serialThread.start()
         time.sleep(1.5)
-        self.label_serial.configure(text_color='green', text='Online')
-        self.button_serial.configure(text='Close serial port')
+        if com.isListening:
+            self.label_serial.configure(text_color='green', text='Online')
+            self.button_serial.configure(text='Close serial port')
 
     def Exec(self):
         print('BUTTON')
@@ -251,8 +257,11 @@ class App(customtkinter.CTk):
             self.textBoxOutput.insert(index=0.0, text=macs)
 
         elif self.mode == 'Create WOL file':
-            createWOLsetupFile('Ethernet')
-            text = 'Please copy file manually to:\nC:/Program Files(x86)/Fujifilm/WOL'
+            try:
+                createWOLsetupFile('Ethernet')
+                text = 'File saved successfully'
+            except subprocess.CalledProcessError:
+                text = 'Access denied!\nPlease copy file manually to:\n\nC:/Program Files (x86)/Fujifilm/WOL'
             self.textBoxOutput.insert(index=0.0, text=text)
 
         elif self.mode == 'Basic':
