@@ -2,13 +2,11 @@ import customtkinter
 
 import util.serialCOM as com
 from shell.network.network import *
-from shell.MCU import *
 from shell.generic import *
 from util import menu_list as m
 from threading import Thread
 from calibrations.maFullCalib import mAFullCalibration
 from calibrations.exposureCalibration import *
-
 from util.delayManager import setStopFlag
 from classes.window import windowOptions
 
@@ -164,7 +162,7 @@ class App(customtkinter.CTk):
         if name in m.only_menu:
             self.edit_button(text='Start exposure')
             self.label_output1.configure(text='')
-            self.label_output1.place(relx=0.1, rely=0.5)
+            self.label_output1.place(relx=0.1, rely=0.55)
             self.label_output2.configure(text='')
             self.label_output2.place(relx=0.1, rely=0.60)
 
@@ -175,9 +173,9 @@ class App(customtkinter.CTk):
         elif name in m.with_submenu:
             self.edit_submenu(name)
             self.label_output1.configure(text='')
-            self.label_output1.place(relx=0.1, rely=0.5)
+            self.label_output1.place(relx=0.1, rely=0.58)
             self.label_output2.configure(text='')
-            self.label_output2.place(relx=0.1, rely=0.60)
+            self.label_output2.place(relx=0.1, rely=0.65)
 
         elif name in m.with_submenu_lastmenu:
             self.edit_submenu(name)
@@ -257,8 +255,9 @@ class App(customtkinter.CTk):
             self.textBoxOutput.insert(index=0.0, text=macs)
 
         elif self.mode == 'Create WOL file':
+            createWOLsetupFile('Ethernet')
             try:
-                createWOLsetupFile('Ethernet')
+                copyFile('setup.ini', '"C:\\Program Files (x86)\\Fujifilm\\WOL\\"')
                 text = 'File saved successfully'
             except subprocess.CalledProcessError:
                 text = 'Access denied!\nPlease copy file manually to:\n\nC:/Program Files (x86)/Fujifilm/WOL'

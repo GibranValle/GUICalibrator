@@ -79,7 +79,6 @@ def process_exists(process_name):
 
 def copyFile(origin, destiny):
     dir = os.getcwd()
-    print(dir)
-    call = f'Xcopy {dir}\\{origin} {destiny} /R /S /Y /Q'
-    output = subprocess.check_output(call, shell=True)
+    call = f'Xcopy {dir}\\{origin} {destiny}'
+    output = subprocess.check_output(call, timeout=3)
     print(output)

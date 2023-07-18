@@ -1,5 +1,5 @@
 import subprocess
-from shell.generic import copyFile
+
 
 def getLocalMAC():
     call = 'chcp 65001 | getmac /fo csv /v /nh'
@@ -89,8 +89,6 @@ def createWOLsetupFile(adaptername):
     f.write(line3 + end)
     f.write(line4 + end)
     f.close()
-    copyFile('setup.ini', '"C:/Program Files (x86)/Fujifilm/WOL"')
-
 
 
 def getHostname():
