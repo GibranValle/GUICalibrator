@@ -2,17 +2,15 @@ import customtkinter
 
 import util.serialCOM as com
 from shell.network.network import *
-from shell.process_MUTL_MCU import *
-from shell.process import *
+from shell.MCU import *
+from shell.generic import *
 from util import menu_list as m
 from threading import Thread
 from calibrations.maFullCalib import mAFullCalibration
-from util.delayManager import setStopFlag
 from calibrations.exposureCalibration import *
-from util.location.location import *
-from util.location.location_AWS import *
-from util.location.location_MUTL import *
-from util.location.location_MUTL_MCU import *
+
+from util.delayManager import setStopFlag
+from classes.window import windowOptions
 
 # theme settings
 customtkinter.set_appearance_mode("dark")
@@ -116,7 +114,7 @@ class App(customtkinter.CTk):
         # ROW 3 & 4
         self.textBoxOutput.place(relx=0.1, rely=0.35)
 
-    def edit_last_menu(self, menu=m.icons_aws):
+    def edit_last_menu(self, menu):
         # ROW 5
         self.label_3.configure(text='Icon: ')
         self.label_3.place(relx=0.1, rely=0.60)
@@ -184,21 +182,7 @@ class App(customtkinter.CTk):
         self.submode = name
         self.clearLastmenu()
 
-        if self.mode == 'IconFinder':
-            if name == 'AWS':
-                self.edit_last_menu(menu=m.icons_aws)
-            elif name == 'RUPCTools':
-                self.edit_last_menu(menu=m.icons_RU)
-            elif name == 'MUTL MU':
-                self.edit_last_menu(menu=m.icons_mutl)
-            elif name == 'MUTL MCU':
-                self.edit_last_menu(menu=m.icons_mutl_mcu)
-            elif name == 'Calibration':
-                self.edit_last_menu(menu=m.icons_calib)
-            elif name == 'Calibration Opt':
-                self.edit_last_menu(menu=m.icons_calib_opt)
-
-        elif self.mode == 'Window':
+        if self.mode == 'Window':
             if name == 'AWS':
                 self.edit_last_menu(menu=m.w_aws)
             elif name == 'RUPCTools':
@@ -302,196 +286,8 @@ class App(customtkinter.CTk):
         elif self.mode == 'ES':
             pass
 
-        elif self.mode == 'IconFinder':
-            print(self.option)
-            if self.option == 'Stand by':
-                pyautogui.moveTo(stdbyIcon(), duration=0.5)
-
-            elif self.option == 'Blocked':
-                pyautogui.moveTo(blockedIcon(), duration=0.5)
-
-            elif self.option == 'Ok red':
-                pyautogui.moveTo(okExposure(), duration=0.5)
-
-            elif self.option == 'Calib button':
-                pyautogui.moveTo(calib_button(), duration=0.5)
-
-            elif self.option == 'Field calib button':
-                pyautogui.moveTo(fieldCalib(), duration=0.5)
-
-            elif self.option == 'MU0':
-                pyautogui.moveTo(MU0(), duration=0.5)
-
-            elif self.option == 'MCU0':
-                pyautogui.moveTo(MCU0(), duration=0.5)
-
-            elif self.option == 'New':
-                pyautogui.moveTo(new(), duration=0.5)
-
-            elif self.option == 'Install':
-                pyautogui.moveTo(install(), duration=0.5)
-
-            elif self.option == 'calibration':
-                pyautogui.moveTo(calibration(), duration=0.5)
-
-            elif self.option == 'calibration (opt)':
-                pyautogui.moveTo(calibrationOptional(), duration=0.5)
-
-            elif self.option == 'calibration (MU)':
-                pyautogui.moveTo(calibration_MU(), duration=0.5)
-
-            elif self.option == 'Generator Check':
-                pyautogui.moveTo(generator_MU(), duration=0.5)
-
-            elif self.option == 'left':
-                pyautogui.moveTo(left(), duration=0.5)
-
-            elif self.option == 'right':
-                pyautogui.moveTo(right(), duration=0.5)
-
-            elif self.option == 'Toggle HVL':
-                pyautogui.moveTo(toggle_HVL(), duration=0.5)
-
-            elif self.option == 'Toggle MAG':
-                pyautogui.moveTo(toggle_MAG(), duration=0.5)
-
-            elif self.option == 'Enable Ment Mode':
-                pyautogui.moveTo(enable_ment(), duration=0.5)
-
-            elif self.option == 'offset':
-                pyautogui.moveTo(offset(), duration=0.5)
-
-            elif self.option == 'defect':
-                pyautogui.moveTo(defect(), duration=0.5)
-
-            elif self.option == 'defect':
-                pyautogui.moveTo(defect(), duration=0.5)
-
-            elif self.option == 'defect solid':
-                pyautogui.moveTo(defectSolid(), duration=0.5)
-
-            elif self.option == 'pixel defect':
-                pyautogui.moveTo(pixelDefect(), duration=0.5)
-
-            elif self.option == 'shading':
-                pyautogui.moveTo(shading(), duration=0.5)
-
-            elif self.option == 'uniformity':
-                pyautogui.moveTo(uniformity(), duration=0.5)
-
-            elif self.option == 'sensitivity':
-                pyautogui.moveTo(sensitivity(), duration=0.5)
-
-            elif self.option == 'defect solid stereo':
-                pyautogui.moveTo(defectSolidStereo(), duration=0.5)
-
-            elif self.option == 'defect solid biopsy':
-                pyautogui.moveTo(defectSolidBpy(), duration=0.5)
-
-            elif self.option == 'defect solid tomo':
-                pyautogui.moveTo(defectSolidTomo(), duration=0.5)
-
-            elif self.option == 'x-ray uniformity stereo':
-                pyautogui.moveTo(uniformityStereo(), duration=0.5)
-
-            elif self.option == 'x-ray uniformity biopsy':
-                pyautogui.moveTo(uniformityBpy(), duration=0.5)
-
-            elif self.option == 'x-ray uniformity tomo':
-                pyautogui.moveTo(uniformityTomo(), duration=0.5)
-
-            elif self.option == 'x-ray uniformity es':
-                pyautogui.moveTo(uniformityES(), duration=0.5)
-
         elif self.mode == 'Window':
-
-            if self.option == 'Ok red':
-                pyautogui.moveTo(okExposure(), duration=0.5)
-                pyautogui.click(okExposure())
-
-            elif self.option == 'Calib button':
-                pyautogui.moveTo(calib_button(), duration=0.5)
-                pyautogui.click(calib_button())
-                time.sleep(0.25)
-                pyautogui.click(calib_button())
-
-            elif self.option == 'Field calib button':
-                pyautogui.moveTo(calib_button(), duration=0.25)
-                pyautogui.click(calib_button())
-                time.sleep(0.25)
-                pyautogui.click(calib_button())
-                time.sleep(0.25)
-                pyautogui.moveTo(fieldCalib(), duration=0.25)
-                pyautogui.click(fieldCalib())
-
-            elif self.option == 'Open RU':
-                openRU()
-
-            elif self.option == 'Close RU':
-                closeRU()
-
-            elif self.option == 'Open MUTL MU':
-                openMUTLMU()
-
-            elif self.option == 'Open MUTL MCU':
-                openMUTLMCU()
-
-            elif self.option == 'Close MUTL':
-                closeMUTL()
-
-            elif self.option == 'Toggle HVL':
-                openCalibrationMUMenu()
-                pyautogui.moveTo(toggle_HVL(), duration=0.25)
-                pyautogui.click(toggle_HVL())
-
-            elif self.option == 'Toggle MAG':
-                openCalibrationMUMenu()
-                pyautogui.moveTo(toggle_MAG(), duration=0.25)
-                pyautogui.click(toggle_MAG())
-
-            elif self.option == 'Enable Ment Mode':
-                openGeneratorMUMenu()
-                pyautogui.moveTo(enable_ment(), duration=0.25)
-                pyautogui.click(enable_ment())
-
-            elif 'offset' in self.option:
-                startOffsetCalib()
-
-            elif 'defect' in self.option:
-                startDefectCalib()
-
-            elif 'defect solid' in self.option:
-                startDefectCalib()
-
-            elif 'pixel defect' in self.option:
-                startPixelDefectCalib()
-
-            elif 'shading' in self.option:
-                startShadingCalib()
-
-            elif 'uniformity' in self.option:
-                startUniformityCalib()
-
-            elif 'defect solid stereo' in self.option:
-                startDefectSolidCalib()
-
-            elif 'defect solid biopsy' in self.option:
-                startDefectSolidBpyCalib()
-
-            elif 'defect solid tomo' in self.option:
-                startDefectSolidTomoCalib()
-
-            elif 'x-ray uniformity stereo' in self.option:
-                startUniformityStereoCalib()
-
-            elif 'x-ray uniformity biopsy' in self.option:
-                startUniformityBpyCalib()
-
-            elif 'x-ray uniformity tomo' in self.option:
-                startUniformityTomoCalib()
-
-            elif 'x-ray uniformity ES' in self.option:
-                startUniformityESCalib()
+            windowOptions(self.option)
 
     def editLabel1(self, text=''):
         self.label_2.configure(text=text)
