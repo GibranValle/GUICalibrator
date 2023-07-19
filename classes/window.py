@@ -1,45 +1,22 @@
-from pyautogui import moveTo, click
-from shell.MCU import *
-from util.location.MUTL import *
-from util.location.MUTL_MCU import *
 from util.location.AWS import *
-from shell.generic import *
-from shell.RU import *
+from shell.RU_MUTL import *
 from shell.MCU import *
 from shell.MU import *
-from time import sleep
-
-
-def _moveNclick(x, y):
-    if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
-        click(x, y)
-        sleep(0.25)
-
-
-def _moveN2Click(x, y):
-    if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
-        click(x, y)
-        sleep(0.25)
-        click(x, y)
+from util.misc import moveNclick, moveN2Click
 
 
 def windowOptions(option):
+    print(option)
     if option == 'Ok red':
         x, y = okExposure()
-        _moveNclick(x, y)
+        moveNclick(x, y)
 
     elif option == 'Calib button':
         x, y = calib_button()
-        _moveN2Click(x, y)
+        moveN2Click(x, y)
 
     elif option == 'Field calib button':
-        x, y = calib_button()
-        _moveN2Click(x, y)
-
-        x, y = fieldCalib()
-        _moveNclick(x, y)
+        enable_calib_button()
 
     elif option == 'Open RU':
         openRU()
@@ -57,19 +34,13 @@ def windowOptions(option):
         closeMUTL()
 
     elif option == 'Toggle HVL':
-        openCalibrationMUMenu()
-        x, y = toggle_HVL()
-        _moveNclick(x, y)
+        toggle_HVL()
 
     elif option == 'Toggle MAG':
-        openCalibrationMUMenu()
-        x, y = toggle_MAG()
-        _moveNclick(x, y)
+        toggle_MAG()
 
     elif option == 'Enable Ment Mode':
-        openGeneratorMUMenu()
-        x, y = enable_ment()
-        _moveNclick(x, y)
+        enable_ment()
 
     elif 'offset' in option:
         startOffsetCalib()

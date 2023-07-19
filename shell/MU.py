@@ -1,138 +1,76 @@
-from util.location.generic import genericCoordinatesCenter, genericCoordinates
-from shell.generic import openApp, process_exists, closeApp, changeWindow
+from util.location.MU import MU_page_0, search_calibration_MU, search_generator_MU, search_toggle_MAG, \
+    search_enable_ment, search_toggle_HVL, search_calib_button, search_field_button
+from util.location.RU_MUTL import right
+from shell.generic import openApp, process_exists, changeWindow
+from util.misc import printError, moveNclick, moveN2Click
+
 
 def openMUTLMU():
+    """ Open MUTL without RUPCTools if it is running only change window """
     if process_exists('MUTL.exe'):
         return changeWindow('MU0')
     openApp('MU')
 
 
-def MU_page_0():
-    x0, y0, w, h = genericCoordinates('mutl/MU/mua')
-    if x0 and y0 > 0:
-        x = x0 + w / 2
-        y = y0 + h / 2
-        return x, y
-
-
-def calibration_MU():
-    print('LOOKING FOR CALIBRATION MU')
-    x0, y0, w, h = genericCoordinates('mutl/MU/mub')
-    if x0 and y0 > 0:
-        x = x0 + (1 * w / 5)
-        y = y0 + h / 2
-        return x, y
-    x0, y0, w, h = genericCoordinates('mutl/MU/generator_selected', 0.55)
-    if x0 and y0 > 0:
-        x = x0 + (1 * w / 5)
-        y = y0 + h / 2
-        return x, y
-    x0, y0, w, h = genericCoordinates('mutl/MU/calibration_selected')
-    if x0 and y0 > 0:
-        return 'selected', 'selected'
-    # if x0 and y0 > 0:
-    #     x = x0 + (1 * w / 5)
-    #     y = y0 + h / 2
-    #     return x, y
-    print('nothing found')
-    return -1, -1
-
-
-def generator_MU():
-    print('LOOKING FOR CALIBRATION gen')
-    x0, y0, w, h = genericCoordinates('mutl/MU/mub')
-    if x0 and y0 > 0:
-        print('mub')
-        x = x0 + w / 2
-        y = y0 + h / 2
-        return x, y
-
-    x0, y0, w, h = genericCoordinates('mutl/MU/calibration_selected')
-    if x0 and y0 > 0:
-        x = x0 + w / 2
-        y = y0 + h / 2
-        return x, y
-
-    x0, y0, w, h = genericCoordinates('mutl/MU/generator_selected')
-    if x0 and y0 > 0:
-        print('gen selected')
-        x = x0 + w / 2
-        y = y0 + h / 2
-        return x, y
-    print('nothing found')
-    return -1, -1
+def is_MU_page_0():
+    x, y = MU_page_0()
+    if x > 0 and y > 0:
+        # NO FIRST PAGE, CHANGE TO NEXT
+        x, y = right()
+        moveNclick(x, y)
 
 
 def enable_ment():
-    x, y = genericCoordinatesCenter('mutl/MU/enable_ment')
+    openMUTLMU()
+    openGeneratorMUMenu()
+    x, y = search_enable_ment()
     if x and y > 0:
-        return x, y
-    print('nothing found')
-    return -1, -1
+        moveNclick(x, y)
 
 
 def toggle_MAG():
-    x0, y0, w, h = genericCoordinates('mutl/MU/MAG_HVL')
-    if x0 and y0 > 0:
-        x = x0 + w / 2
-        y = y0 + h / 4
-        return x, y
-    print('nothing found')
-    return -1, -1
+    openMUTLMU()
+    openCalibrationMUMenu()
+    x, y = search_toggle_MAG()
+    if x and y > 0:
+        moveNclick(x, y)
 
 
 def toggle_HVL():
-    x0, y0, w, h = genericCoordinates('mutl/MU/MAG_HVL')
-    if x0 and y0 > 0:
-        x = x0 + w / 2
-        y = y0 + 3 * h / 4
-        return x, y
-    print('nothing found')
-    return -1, -1
+    openMUTLMU()
+    openCalibrationMUMenu()
+    x, y = search_toggle_HVL()
+    if x and y > 0:
+        moveNclick(x, y)
+    printError('TOGGLE HVL BUTTON NOT FOUND')
 
 
-def MU0():
-    x, y = genericCoordinatesCenter('ru/MU0')
-    x1, y1 = genericCoordinatesCenter('ru/MU0_S')
-    if x > 0 and y > 0:
-        return x, y
-    if x1 > 0 and y1 > 0:
-        return x1, y1
-    else:
-        return -1, -1
+def enable_calib_button():
+    x, y = search_calib_button()
+    moveN2Click(x, y)
+    x, y = search_field_button()
+    moveNclick(x, y)
 
 
 def openCalibrationMUMenu():
-    openMUTLMU()
-    # is MCU FIRST PAGE?
-    x, y = MU_page_0()
-    if x > 0 and y > 0:
-        # NO FIRST PAGE, CHANGE TO NEXT
-        x, y = right()
-        if x > 0 and y > 0:
-            moveTo(x, y, duration=0.5)
-            click(x, y)
-
-    x, y = calibration_MU()
-    if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
-        click(x, y)
+    is_MU_page_0()
+    x, y = search_calibration_MU()
+    if x == 'selected':
+        print('ALREADY SELECTED')
         return
+    elif x > 0 and y > 0:
+        moveNclick(x, y)
+        return
+    printError('CALIB MU BUTTON NOT FOUND')
 
 
 def openGeneratorMUMenu():
-    openMUTLMU()
-    # is MCU FIRST PAGE?
-    x, y = MU_page_0()
-    if x > 0 and y > 0:
-        # NO FIRST PAGE, CHANGE TO NEXT
-        x, y = right()
-        if x > 0 and y > 0:
-            moveTo(x, y, duration=0.5)
-            click(x, y)
-
-    x, y = generator_MU()
-    if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
-        click(x, y)
+    is_MU_page_0()
+    x, y = search_generator_MU()
+    if x == 'selected':
+        print('ALREADY SELECTED')
         return
+    elif x > 0 and y > 0:
+        moveNclick(x, y)
+        return
+    printError('GENERATOR MU BUTTON NOT FOUND')

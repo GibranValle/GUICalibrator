@@ -1,5 +1,4 @@
 import customtkinter
-
 import util.serialCOM as com
 from shell.network.network import *
 from shell.generic import *
@@ -9,16 +8,19 @@ from calibrations.maFullCalib import mAFullCalibration
 from calibrations.exposureCalibration import *
 from util.delayManager import setStopFlag
 from classes.window import windowOptions
+from shell.MCU import *
 
 # theme settings
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
-HEIGHT_1 = 50
+HEIGHT_1 = 45
 HEIGHT_2 = 40
 HEIGHT_3 = 30
 WIDTH_1 = 240
 WIDTH_2 = 180
+WIDTH_3 = 110
+
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -34,22 +36,22 @@ class App(customtkinter.CTk):
         # Make the window jump above all
         self.attributes('-topmost', True)
 
-        self.geometry("300x400")
+        self.geometry("300x320")
         self.title("FPD Calibration bot")
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-        # ------------------------------------------------------------ COMPONENTS ------------------------------------------------------------------------
+        # -------------------------------------------- COMPONENTS ------------------------------------------------------
 
         # serial
         self.frame1 = customtkinter.CTkFrame(master=self, height=HEIGHT_1, fg_color="#353535")
-        self.frame1.pack(pady=10, padx=10, fill='both')
+        self.frame1.pack(pady=(5, 10), padx=10, fill='both')
         self.label_serial = customtkinter.CTkLabel(master=self.frame1, font=self.font_title, text_color='red',
                                                    text='Offline')
         self.label_serial.place(relx=0.05, rely=0.25)
         self.button_serial = customtkinter.CTkButton(master=self.frame1, command=self.connectButton,
                                                      font=self.font_text, text='Open serial port', height=HEIGHT_3)
-        self.button_serial.place(relx=0.40, rely=0.175)
+        self.button_serial.place(relx=0.40, rely=0.15)
 
         # MAIN MENU
         # ROW 1
@@ -74,7 +76,12 @@ class App(customtkinter.CTk):
                                                   width=WIDTH_2, height=HEIGHT_3)
 
         self.button_run = customtkinter.CTkButton(master=self, command=self.Exec, font=self.font_text,
-                                                  fg_color='#003366', hover_color='#002255', height=HEIGHT_2, width=WIDTH_2)
+                                                  fg_color='#003366', hover_color='#002255', height=HEIGHT_2,
+                                                  width=WIDTH_3)
+
+        self.button_opt = customtkinter.CTkButton(master=self, command=self.ExecOpt, font=self.font_text,
+                                                  fg_color='#003366', hover_color='#002255', height=HEIGHT_2,
+                                                  width=WIDTH_3)
 
         self.label_output1 = customtkinter.CTkLabel(master=self, font=self.font_text)
         self.label_output2 = customtkinter.CTkLabel(master=self, font=self.font_text)
@@ -108,14 +115,12 @@ class App(customtkinter.CTk):
             self.menu_2.configure(values=m.tomo)
         elif submenu == 'ES':
             self.menu_2.configure(values=m.es)
-        elif submenu == 'IconFinder':
-            self.menu_2.configure(values=m.iconFinder)
         elif submenu == 'Window':
             self.menu_2.configure(values=m.window)
 
     def edit_output(self):
         # ROW 3 & 4
-        self.textBoxOutput.place(relx=0.1, rely=0.35)
+        self.textBoxOutput.place(relx=0.1, rely=0.38)
 
     def edit_last_menu(self, menu):
         # ROW 5
@@ -127,13 +132,16 @@ class App(customtkinter.CTk):
         self.menu_3.configure(values=menu)
         self.menu_3.place(relx=0.1, rely=0.65)
 
-    def edit_button(self, text, error=False):
+    def edit_button(self, text, text2='', error=False):
         # ROW 7
         if not error:
             self.button_run.configure(text=text, fg_color='#003366', hover_color='#002255')
         else:
             self.button_run.configure(text=text, fg_color='#880015', hover_color='#6E0011')
-        self.button_run.place(relx=0.20, rely=0.8)
+        if text2 != '':
+            self.button_opt.configure(text=text2, fg_color='#003366', hover_color='#002255')
+            self.button_opt.place(relx=0.55, rely=0.8)
+        self.button_run.place(relx=0.1, rely=0.8)
 
     # ---------------------- CLEAR----------------
     def clearAll(self):
@@ -149,18 +157,19 @@ class App(customtkinter.CTk):
 
     def clearLastmenu(self):
         self.button_run.place_forget()
+        self.button_opt.place_forget()
         self.label_3.place_forget()
         self.menu_3.place_forget()
         self.label_output1.configure(text='')
         self.label_output2.configure(text='')
 
-    # --------------------------------------------------------- HANDLE EVENTS ----------------------------------------------------------------------
+    # ----------------------------------------- HANDLE EVENTS ---------------------------------------------------------
     def mode_changed(self, name: str):
         self.mode = name
         self.clearAll()
 
         if name in m.only_menu:
-            self.edit_button(text='Start exposure')
+            self.edit_button(text='Start', text2='Open')
             self.label_output1.configure(text='')
             self.label_output1.place(relx=0.1, rely=0.55)
             self.label_output2.configure(text='')
@@ -199,14 +208,12 @@ class App(customtkinter.CTk):
             self.edit_last_menu()
 
         elif self.mode in m.with_submenu:
-            self.edit_button('Start calibration')
+            self.edit_button('Start', 'Open')
 
     def lastmenu_changed(self, name: str):
         print('last menu changed')
         self.option = name
-        if self.mode == 'IconFinder':
-            self.edit_button('Find icon')
-        elif self.mode == 'Window':
+        if self.mode == 'Window':
             self.edit_button('Execute')
 
     def on_closing(self):
@@ -232,22 +239,22 @@ class App(customtkinter.CTk):
         if self.isRunning:
             setStopFlag()
             self.isRunning = False
-            self.edit_button('Start Exposure')
+            self.edit_button('Start')
             return
 
         if self.mode == 'mA Full':
             self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
+            self.edit_button('Stop', error=True)
             Thread(target=mAFullCalibration, args=[self], daemon=True).start()
 
         elif self.mode == 'Single shot':
             self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
+            self.edit_button('Stop', error=True)
             Thread(target=singleShot, args=[self], daemon=True).start()
 
         elif self.mode == '10 Shots':
             self.isRunning = True
-            self.edit_button('Stop Exposure', error=True)
+            self.edit_button('Stop', error=True)
             Thread(target=TenShots, args=[self], daemon=True).start()
 
         elif self.mode == 'Save MAC':
@@ -267,22 +274,22 @@ class App(customtkinter.CTk):
 
             if self.submode == 'Defect-solid':
                 self.isRunning = True
-                self.edit_button('Stop Exposure', error=True)
+                self.edit_button('Stop', error=True)
                 Thread(target=defectSolidCalib, args=[self], daemon=True).start()
 
             elif self.submode == 'Pixel-defect':
                 self.isRunning = True
-                self.edit_button('Stop Exposure', error=True)
+                self.edit_button('Stop', error=True)
                 Thread(target=pixedDefectCalib, args=[self], daemon=True).start()
 
             elif self.submode == 'Shading':
                 self.isRunning = True
-                self.edit_button('Stop Exposure', error=True)
+                self.edit_button('Stop', error=True)
                 Thread(target=shadingCalib, args=[self], daemon=True).start()
 
             elif self.submode == 'X-ray uniformity':
                 self.isRunning = True
-                self.edit_button('Stop Exposure', error=True)
+                self.edit_button('Stop', error=True)
                 Thread(target=uniformityCalib, args=[self], daemon=True).start()
 
         elif self.mode == 'Stereo':
@@ -295,7 +302,13 @@ class App(customtkinter.CTk):
             pass
 
         elif self.mode == 'Window':
+            print('WINDOW MODE')
             windowOptions(self.option)
+
+    def ExecOpt(self):
+        if self.mode == 'Basic':
+            if self.submode == 'Defect-solid':
+                startDefectSolidCalib(self)
 
     def editLabel1(self, text=''):
         self.label_2.configure(text=text)

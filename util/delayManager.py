@@ -1,7 +1,7 @@
 import time
 import customtkinter as ck
 
-from util.location.AWS import stdbyIcon, blockedIcon, isExposing
+from util.location.AWS import stdbyIcon, blockedIcon, isExposing, okExposure
 
 stopFlag = False
 
@@ -64,7 +64,22 @@ def waitTillEndYellow(final, init, label: ck.CTkLabel):
     return secs
 
 
+def waitTillOk(final: int, init: int, label: ck.CTkLabel):
+    minTime = 20
+    breakCondition = isWaitingOk
+    text = 'Wait for end'
+    secs = genericCounter(label, init, final, minTime, breakCondition, text)
+    return secs
+
+
 # --------------------------- AUXILIARY -----------------------------------------------------------
+
+def isWaitingOk():
+    x, y = okExposure()
+    if x > 0 and y > 0:
+        return True
+    return False
+
 
 def isStdBy():
     x, y = stdbyIcon()
@@ -92,6 +107,7 @@ def isExposureNotDone():
     if x > 0 and y > 0:
         return True
     return False
+
 
 def getStopFlag():
     global stopFlag
