@@ -11,9 +11,11 @@ offline = True
 
 
 def startListening():
+    print('START LISTENING THREAD')
     global arduino, isListening, buffer, response, waitingResponse, offline
     arduino = advancedSerialInit()
     if arduino is None:
+        print('NO ARDUINO IS CONNECTED')
         return
 
     if communicate("X"):
