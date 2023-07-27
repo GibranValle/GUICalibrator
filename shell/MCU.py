@@ -1,7 +1,13 @@
-from pyautogui import moveTo, click
-from shell.generic import openApp, process_exists, closeApp, changeWindow
-from util.location.MUTL import *
-from util.location.MUTL_MCU import *
+from shell.MU import enable_calib_button
+from shell.generic import openApp, process_exists, changeWindow
+from util.delayManager import waitTillOk, waitTillReady
+from util.location.RU_MUTL import *
+from util.location.MCU import *
+from util.misc import moveNclick
+from util.location.AWS import okExposure
+from threading import Thread
+from calibrations.exposureCalibration import defectSolidCalib
+import customtkinter as ck
 
 
 def openMUTLMCU():
@@ -10,156 +16,133 @@ def openMUTLMCU():
     openApp('MCU')
 
 
+def waitThread(gui_object: ck.CTk = None, calib_name=''):
+    label = gui_object.label
+    waitTillOk(0, 10 * 60, label)
+    x, y = okExposure()
+    moveNclick(x, y)
+    waitTillReady(0, 20, label)
+    if calib_name == 'defect solid':
+        defectSolidCalib()
+
+
 def openCalibrationMenu():
-    openMUTLMCU()
     # is MCU FIRST PAGE?
     x, y = MCU_page_0()
     if x > 0 and y > 0:
         # NO FIRST PAGE, CHANGE TO NEXT
         x, y = right()
-        if x > 0 and y > 0:
-            moveTo(x, y, duration=0.5)
-            click(x, y)
-
+        moveNclick(x, y)
     x, y = calibration()
-    if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
-        click(x, y)
-    elif x == 'selected':
+    if x == 'selected':
         print('Already selected')
+        return
+    moveNclick(x, y)
 
 
 def openCalibrationOptMenu():
-    openMUTLMCU()
     # is MCU FIRST PAGE?
     x, y = MCU_page_0()
     if x > 0 and y > 0:
         # NO FIRST PAGE, CHANGE TO NEXT
         x, y = right()
-        if x > 0 and y > 0:
-            moveTo(x, y, duration=0.5)
-            click(x, y)
+        moveNclick(x, y)
     # NO CALIB SELECTED
     x, y = calibrationOptional()
-    if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
-        click(x, y)
-    elif x == 'selected':
+    if x == 'selected':
         print('Already selected')
+        return
+    moveNclick(x, y)
 
 
 def startOffsetCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = offset()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startDefectCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = defect()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
-def startDefectSolidCalib():
+def startDefectSolidCalib(gui_object: ck.CTk = None):
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolid()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
+    enable_calib_button()
+    Thread(target=waitThread, args=[gui_object, 'defect solid'], daemon=True).start()
 
 
 def startPixelDefectCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = pixelDefect()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startShadingCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = shading()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startUniformityCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = shading()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startDefectSolidStereoCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolidStereo()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startDefectSolidBpyCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolidBpy()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startDefectSolidTomoCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolidTomo()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startUniformityStereoCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = offset()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startUniformityBpyCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = uniformityBpy()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startUniformityTomoCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = uniformityTomo()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)
 
 
 def startUniformityESCalib():
+    openMUTLMCU()
     openCalibrationMenu()
     x, y = uniformityES()
-    if x <= 0 and y <= 0:
-        return
-    moveTo(x, y, duration=0.5)
-    click(x, y)
+    moveNclick(x, y)

@@ -2,8 +2,10 @@ import subprocess
 from time import sleep
 import win32gui as w
 import win32con as c
-from pyautogui import moveTo, click
 import os
+
+from util.misc import printError
+
 
 def changeWindow(name):
     def handler(hwnd, active):
@@ -14,7 +16,7 @@ def changeWindow(name):
                 w.ShowWindow(hwnd, c.SW_NORMAL)
 
     w.EnumWindows(handler, name)
-    sleep(0.5)
+    sleep(1)
 
 
 def openApp(appName):
@@ -29,6 +31,7 @@ def openApp(appName):
             route = 'C:\Program Files\FujiFilm\FCR\TOOL\MUTL\\'
             exe = 'MUTL'
             args = ' /IP:192.168.0.100 /RUNAME:MU0 /TYPE:FDR-2500A'
+            print(route, exe, args)
             subprocess.Popen(route + exe + args)
 
         elif appName == 'MCU':
@@ -37,16 +40,18 @@ def openApp(appName):
             args = ' /IP:192.168.0.101 /RUNAME:MCU0 /TYPE:FDR-3000DRL /FCR:C:\Program Files\FujiFilm\FCR\\'
             subprocess.Popen(route + exe + args)
     except FileNotFoundError:
-        print('File not found')
+        printError('File not found')
+    except OSError:
+        printError('Program not installed')
 
-    sleep(0.5)
+    sleep(1)
 
 
 def closeApp(appName):
     if process_exists(appName):
         subprocess.call(["taskkill", "/F", "/IM", appName],
                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        sleep(0.5)
+        sleep(1)
 
 
 def _scanWindows():
@@ -79,7 +84,6 @@ def process_exists(process_name):
 
 def copyFile(origin, destiny):
     dir = os.getcwd()
-    print(dir)
-    call = f'Xcopy {dir}\\{origin} {destiny} /R /S /Y /Q'
-    output = subprocess.check_output(call, shell=True)
+    call = f'Xcopy {dir}\\{origin} {destiny}'
+    output = subprocess.check_output(call, timeout=3)
     print(output)

@@ -1,7 +1,8 @@
 from util.location.generic import genericCoordinatesCenter, genericCoordinates
+from util.misc import printError
 
 
-def MCU0():
+def search_MCU0():
     x, y = genericCoordinatesCenter('ru/MCU0')
     x1, y1 = genericCoordinatesCenter('ru/MCU0_S')
     if x > 0 and y > 0:
@@ -18,10 +19,11 @@ def MCU_page_0():
         x = x0 + w / 2
         y = y0 + h / 2
         return x, y
+    printError('MCU PAGE 0 NOT FOUND')
+    return -1, -1
 
 
 def calibration():
-    print('LOOKING FOR CALIBRATION')
     x0, y0, w, h = genericCoordinates('mutl/MCU/calibration_unselected')
     if x0 and y0 > 0:
         x = x0 + w / 2
@@ -38,6 +40,7 @@ def calibration():
         # x = x0 + w / 2
         # y = y0 + h / 2
         # return x, y
+    printError('CALIBRATION BUTTON NOT FOUND')
     return -1, -1
 
 
@@ -58,6 +61,7 @@ def calibrationOptional():
     #     x = x0 + (4 * w / 5)
     #     y = y0 + h / 2
     #     return x, y
+    printError('CALIBRATION OPT BUTTON NOT FOUND')
     return -1, -1
 
 

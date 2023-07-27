@@ -1,5 +1,6 @@
 from shell.generic import openApp, process_exists, closeApp, changeWindow
 
+
 def openRU():
     if process_exists('RuPcTool.exe'):
         return changeWindow('RU PC-TOOL')
