@@ -24,3 +24,11 @@ def calib_button():
 
 def fieldCalib():
     return genericCoordinatesCenter('aws/fieldcalib_button')
+
+
+def pasarIcon():
+    return genericCoordinatesCenter('aws/pasar')
+
+
+def saltarIcon():
+    return genericCoordinatesCenter('aws/saltar')

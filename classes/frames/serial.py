@@ -12,7 +12,7 @@ def create_serial_frame(self):
     self.button_serial = CTkButton(self.frame_serial, command=lambda: toggle_serial(self), font=self.font_text, text='Connect')
     self.button_serial.pack(pady=20, padx=10)
 
-    self.main_menu = CTkButton(self.frame_serial, command=lambda: back2main(self), font=self.font_text, text='Main menu',
+    self.main_menu = CTkButton(self.frame_serial, command=self.generic.back2main, font=self.font_text, text='Main menu',
                                fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
     self.main_menu.pack(pady=(0, 20), padx=10)
 

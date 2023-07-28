@@ -1,7 +1,6 @@
 from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox
 from util import menu_list as m
 from classes.constants import *
-from classes.generic import *
 
 
 def menu_change(self, option):
@@ -49,7 +48,7 @@ def create_auto_frame(self):
     self.menu_calib.set(m.calib_menu[0])
     self.menu_calib.pack(pady=5, padx=20, fill='x')
 
-    self.enable_calib = CTkButton(self.frame_auto, command=open_serial_config, font=self.font_text,
+    self.enable_calib = CTkButton(self.frame_auto, command=self.generic.open_serial_config, font=self.font_text,
                                   text='Enable calib', text_color_disabled=DISABLED_COLOR)
     self.enable_calib.pack(pady=5, padx=20, fill='x')
 
@@ -68,12 +67,12 @@ def create_auto_frame(self):
                                  text=STOP, state='disabled', text_color_disabled=DISABLED_COLOR, fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
     self.stop_button.grid(row=0, column=3)
 
-    self.label_output1 = CTkLabel(self.frame_auto, text='M1:', font=self.font_text, anchor='w')
+    self.label_output1 = CTkLabel(self.frame_auto, text='M1:', font=self.font_output, anchor='w')
     self.label_output1.pack(pady=(3, 0), padx=20, fill='x')
 
-    self.label_output2 = CTkLabel(self.frame_auto, text='M2:', font=self.font_text, anchor='w')
+    self.label_output2 = CTkLabel(self.frame_auto, text='M2:', font=self.font_output, anchor='w')
     self.label_output2.pack(pady=(3, 5), padx=20, fill='x')
 
-    self.main_menu = CTkButton(self.frame_auto, command=lambda: back2main(self), font=self.font_text, text='Main menu',
+    self.main_menu = CTkButton(self.frame_auto, command=self.generic.back2main, font=self.font_text, text='Main menu',
                                fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
     self.main_menu.pack(pady=(5, 3), padx=10)

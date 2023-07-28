@@ -11,8 +11,8 @@ from classes.frames.auto import *
 from classes.frames.main import *
 from classes.frames.serial import *
 from classes.frames.utils import *
-from classes.generic import *
-from util.delayManager import setStopFlag
+from classes.generic import Generic
+from util.delayManager import DelayManager
 from classes.window import windowOptions
 
 # theme settings
@@ -23,6 +23,8 @@ set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-bl
 class App(CTk):
     def __init__(self):
         super().__init__()
+        self.generic = Generic(self)
+        self.delay = DelayManager(self)
         self.font_title = ("Consolas", 18, 'bold')
         self.font_text = ("Consolas", 16)
         self.font_output = ("Consolas", 13)
@@ -42,12 +44,14 @@ class App(CTk):
         # ------------------------------------------------------------ COMPONENTS ------------------------------------------------------------------------
         self.label_serial_main = CTkLabel(self, text='Offline', font=self.font_title, text_color='red')
         self.label_serial_main.pack(pady=(10, 0), padx=20)
+        self.manual = Manual(self)
         create_main_frame(self)
         create_serial_frame(self)
-        create_manual_frame(self)
+        self.manual.create_manual_frame()
         create_auto_frame(self)
         create_utils_frame(self)
-        display_main_frame(self)
+        self.generic.display_main_frame()
+
 
     # --------------------------------------------------------- HANDLE EVENTS ----------------------------------------------------------------------
     def on_closing(self):

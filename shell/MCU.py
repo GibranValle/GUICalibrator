@@ -1,6 +1,5 @@
 from shell.MU import enable_calib_button
 from shell.generic import openApp, process_exists, changeWindow
-from util.delayManager import waitTillOk, waitTillReady
 from util.location.RU_MUTL import *
 from util.location.MCU import *
 from util.misc import moveNclick
