@@ -16,3 +16,5 @@ build/
 
 #ignore all .spec files
 .spec
+/calibrationBot.spec
+/setup.ini
