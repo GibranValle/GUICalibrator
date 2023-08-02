@@ -1,51 +1,50 @@
-import time
+from time import  sleep
 from util.serialCOM import communicate
 import customtkinter as ck
-from util.delayManager import createMessage
 
 
 def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
     gui = gui_object
     print('GENERIC CALIB')
-    gui.delay.resetFlags()
+    gui.delay.startStatus()
     pause = 30
     total = 0
+    gui.generic.clear_output()
 
     for i in range(1, exposures + 1):
-        if gui.delay.stopFlag:
+        if gui.delay.status == 'stop':
             break
 
+        if gui.delay.status == 'pause':
+            while gui.delay.status == 'pause':
+                sleep(1)
+
         if not communicate("S"):
-            text1 = 'Failed exposure request'
-            gui.generic.edit_output(text1)
-            return  # return if no communication is established
+            return gui.generic.not_responding()
+
         text1 = f'Requested exposure {i} of {exposures}'
         gui.generic.edit_output(text1)
         total += gui.delay.waitTillEnd(1, duration)
 
         if not communicate("X"):
-            text1 = 'Failed requested end'
-            gui.generic.edit_output(text1)
-            return  # return if no communication is established
+            return gui.generic.not_responding()
+
+        if i == exposures + 1:
+            return gui.generic.request_end()
+
         if exposures > 1:
-            text1 = 'Requested end of exposure'
-            gui.generic.edit_output(text1)
+            gui.generic.request_end()
             total += gui.delay.waitTillReady(1, pause)
 
-    if gui.delay.stopFlag:
-        text1 = 'Calibration aborted'
-        text2 = 'Please try again'
-        gui.generic.edit_output(text1, text2)
+    if gui.delay.status == 'stop':
+        return gui.generic.abort_requested()
+
+    if name == 'single' or name == 'ten':
+        gui.generic.exposure_done(total)
+        gui.manual.pushed('stop')
         return
 
-    if name == 'single':
-        text1 = 'Exposure completed!'
-        text2 = createMessage('This exposure took', total)
-        gui.manual.pushed('stop')
-
-    text1 = 'Calibration completed!'
-    text2 = createMessage('This calibration took', total)
-    gui.generic.edit_output(text1, text2)
+    gui.generic.exposure_done(total, 'Calibration')
 
 
 def defectSolidCalib(gui_object: ck.CTk = None):
@@ -110,6 +109,4 @@ def singleShot(gui_object: ck.CTk = None):
 
 def TenShots(gui_object: ck.CTk = None):
     exposures = 10
-    genericCalibration('single', exposures, gui_object, duration=15)
-
-
+    genericCalibration('ten', exposures, gui_object, duration=15)

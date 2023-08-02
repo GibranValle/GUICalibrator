@@ -25,11 +25,10 @@ def genericCoordinates(name, confidence=0.9):
         return -1, -1, -1, -1
 
 
-def genericCoordinatesCenter(name, confidence=0.9):
+def genericCoordinatesCenter(name, confidence=0.95):
     x, y = -1, -1
     try:
         x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)
-        print(x, y)
         return x, y
 
     except TypeError:

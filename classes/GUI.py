@@ -28,20 +28,14 @@ class App(CTk):
         self.font_title = ("Consolas", 18, 'bold')
         self.font_text = ("Consolas", 16)
         self.font_output = ("Consolas", 13)
-        self.status = 'stop'
-        self.index = -1
-        self.mode = ''
-        self.submode = ''
-        self.option = ''
         # Make the window jump above all
         self.attributes('-topmost', True)
-
         self.geometry("300x350")
         self.title("FPD Calibration bot")
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-        # ------------------------------------------------------------ COMPONENTS ------------------------------------------------------------------------
+        # ----------------------------------- COMPONENTS ------------------------------------------------
         self.label_serial_main = CTkLabel(self, text='Offline', font=self.font_title, text_color='red')
         self.label_serial_main.pack(pady=(10, 0), padx=20)
         self.manual = Manual(self)
@@ -52,19 +46,15 @@ class App(CTk):
         create_utils_frame(self)
         self.generic.display_main_frame()
 
-
-    # --------------------------------------------------------- HANDLE EVENTS ----------------------------------------------------------------------
+    # ---------------------------------- HANDLE EVENTS -----------------------------------------------------
     def on_closing(self):
         if com.isListening:
             com.endListening()
         self.destroy()
 
-
-
     def Exec(self):
         print('BUTTON')
         if self.isRunning:
-            setStopFlag()
             self.isRunning = False
             self.edit_button('Start Exposure')
             return

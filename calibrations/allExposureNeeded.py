@@ -1,55 +1,59 @@
-import time
+from time import sleep
+from classes.generic import createMessage
 from util.serialCOM import communicate
 import customtkinter as ck
-from util.delayManager import createMessage, isCalibPass
+from util.delayManager import isCalibPass
 
 
 def smartCalibration(name, gui_object: ck.CTk = None, ):
     gui = gui_object
     print('SMART CALIB')
-    gui.delay.resetFlags()
-    duration = 15
-    pause = 30
+    gui.delay.startStatus()
+    duration = 30
+    pause = 1200
     total = 0
     count = 0
 
     while True:
-        print('inside while')
-        if gui.delay.stopFlag:
-            text1 = 'Calibration aborted'
-            text2 = 'Please try again'
-            gui.generic.edit_output(text1, text2)
-            return
+        while gui.delay.status == 'pause':
+            sleep(1)
+
+        if gui.delay.status == 'stop':
+            return gui.generic.abort_requested()
 
         if isCalibPass():
             break
 
-        print('waiting for ready signal')
-        text1 = f'Exposures count: {count}'
-        gui.generic.edit_output(text1)
-        total += gui.delay.waitTillReady(1, pause)
+        gui.generic.count(count)
+        time = gui.delay.waitTillReady(1, pause)
+        total += time
+        if time >= 600:
+            return gui.generic.abnormal()
 
         if not communicate("S"):
-            text1 = 'Failed exposure request'
-            gui.generic.edit_output(text1)
-            return
-        print('adding 1 exposure')
-        count += 1
+            return gui.generic.not_responding()
+
         text1 = f'Requested exposure {count}'
         gui.generic.edit_output(text1)
-        total += gui.delay.waitTillEnd(1, duration)
+        time = gui.delay.waitTillExposing(1, 15)
+        if time > 10:
+            return gui.generic.abnormal()
+        total += time
 
-        text1 = 'Requested end of exposure'
-        gui.generic.edit_output(text1)
+        time = gui.delay.waitTillEnd(1, duration)
+        if time > 25:
+            return gui.generic.abnormal()
+        total += time
+
+        gui.generic.request_end()
+
         if not communicate("X"):
-            text1 = 'Failed requested end'
-            gui.generic.edit_output(text1)
-            return
+            return gui.generic.not_responding()
 
-    if name == 'all' and not gui.delay.stopFlag:
-        text1 = 'Calibration passed!'
-        text2 = createMessage('Time', total)
-        gui.generic.edit_output(text1, text2 + f' exposures: {count}')
+        count += 1
+
+    if name == 'all':
+        gui.generic.exposure_done_exp(total, count)
         gui.manual.pushed('stop')
 
 

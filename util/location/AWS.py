@@ -5,6 +5,10 @@ def isExposing():
     return genericCoordinatesCenter('ff/xray_exposing')
 
 
+def exposureIcon():
+    return genericCoordinatesCenter('aws/xray_exposure')
+
+
 # AWS
 def blockedIcon():
     return genericCoordinatesCenter('aws/xray_blocked')
