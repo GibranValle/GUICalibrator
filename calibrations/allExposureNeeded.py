@@ -1,5 +1,4 @@
 from time import sleep
-from classes.generic import createMessage
 from util.serialCOM import communicate
 import customtkinter as ck
 from util.delayManager import isCalibPass
@@ -9,8 +8,10 @@ def smartCalibration(name, gui_object: ck.CTk = None, ):
     gui = gui_object
     print('SMART CALIB')
     gui.delay.startStatus()
-    duration = 30
-    pause = 1200
+    scale_factor = 0.75
+    max_exposure_duration = 15
+    time_between_exposures = 30
+    prep_exp_time = 1200
     total = 0
     count = 0
 
@@ -25,9 +26,9 @@ def smartCalibration(name, gui_object: ck.CTk = None, ):
             break
 
         gui.generic.count(count)
-        time = gui.delay.waitTillReady(1, pause)
+        time = gui.delay.waitTillReady(1, prep_exp_time)
         total += time
-        if time >= 600:
+        if time >= prep_exp_time * scale_factor:
             return gui.generic.abnormal()
 
         if not communicate("S"):
@@ -35,13 +36,13 @@ def smartCalibration(name, gui_object: ck.CTk = None, ):
 
         text1 = f'Requested exposure {count}'
         gui.generic.edit_output(text1)
-        time = gui.delay.waitTillExposing(1, 15)
-        if time > 10:
+        time = gui.delay.waitTillExposing(1, max_exposure_duration)
+        if time > max_exposure_duration * scale_factor:
             return gui.generic.abnormal()
         total += time
 
-        time = gui.delay.waitTillEnd(1, duration)
-        if time > 25:
+        time = gui.delay.waitTillEnd(1, time_between_exposures)
+        if time > time_between_exposures * scale_factor:
             return gui.generic.abnormal()
         total += time
 

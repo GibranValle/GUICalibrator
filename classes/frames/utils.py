@@ -21,6 +21,6 @@ def create_utils_frame(self):
     self.textBoxOutput = CTkTextbox(self.frame_utils, font=self.font_output, state='normal', height=100)
     self.textBoxOutput.pack(pady=5, padx=30, fill='x')
 
-    self.main_menu = CTkButton(self.frame_utils, command=lambda: back2main(self), font=self.font_text, text='Main menu',
+    self.main_menu = CTkButton(self.frame_utils, command=lambda: self.generic.back2main(), font=self.font_text, text='Main menu',
                                fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
     self.main_menu.pack(pady=10, padx=10)

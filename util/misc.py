@@ -1,5 +1,5 @@
 from time import sleep
-from pyautogui import moveTo, click
+from pyautogui import moveTo, click, position
 
 
 def printError(text: str):
@@ -23,3 +23,10 @@ def moveN2Click(x, y):
         click(x, y)
         sleep(0.25)
         click(x, y)
+
+
+def advancedClick(x, y):
+    x0, y0 = position()
+    if x > 0 and y > 0:
+        click(x, y)
+        moveTo(x0, y0)

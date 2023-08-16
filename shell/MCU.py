@@ -8,7 +8,6 @@ from threading import Thread
 from calibrations.exposureCalibration import defectSolidCalib
 import customtkinter as ck
 
-
 def openMUTLMCU():
     if process_exists('MUTL.exe'):
         return changeWindow('MCU0')
@@ -17,10 +16,10 @@ def openMUTLMCU():
 
 def waitThread(gui_object: ck.CTk = None, calib_name=''):
     label = gui_object.label
-    waitTillOk(0, 10 * 60, label)
+    gui_object.delay.waitTillOk(0, 10 * 60, label)
     x, y = okExposure()
     moveNclick(x, y)
-    waitTillReady(0, 20, label)
+    gui_object.delay.waitTillOk(0, 20, label)
     if calib_name == 'defect solid':
         defectSolidCalib()
 

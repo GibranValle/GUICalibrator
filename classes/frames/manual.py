@@ -1,4 +1,4 @@
-from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox
+from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox, CTkSwitch
 from util import menu_list as m
 from classes.constants import *
 from classes.generic import *
@@ -35,6 +35,10 @@ class Manual:
         gui.start_button_m.configure(state='normal')
         gui.pause_button_m.configure(state='disabled')
         gui.stop_button_m.configure(state='normal')
+
+    def handleSwitch(self):
+        print(self.gui.is_auto_ok)
+        self.gui.is_auto_ok = not self.gui.is_auto_ok
 
     def pushed(self, button):
         gui = self.gui
@@ -117,3 +121,5 @@ class Manual:
         gui.main_menu = CTkButton(gui.frame_manual, command=gui.generic.back2main, font=gui.font_text, text='Main menu',
                                   fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
         gui.main_menu.pack(pady=10, padx=10)
+        gui.switch_auto = CTkSwitch(gui.frame_manual, text='Autoclick ok', font=gui.font_text, command=self.handleSwitch)
+        gui.switch_auto.pack(pady=10, padx=10)

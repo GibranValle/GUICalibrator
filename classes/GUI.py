@@ -28,6 +28,7 @@ class App(CTk):
         self.font_title = ("Consolas", 18, 'bold')
         self.font_text = ("Consolas", 16)
         self.font_output = ("Consolas", 13)
+        self.is_auto_ok = False
         # Make the window jump above all
         self.attributes('-topmost', True)
         self.geometry("300x350")

@@ -3,7 +3,7 @@ from customtkinter import CTk as ck
 
 from classes.generic import createMessage
 from util.location.AWS import stdbyIcon, blockedIcon, isExposing, okExposure, pasarIcon, saltarIcon, exposureIcon
-
+from shell.AWS import clickOK
 
 class DelayManager:
     def __init__(self, gui_object: ck):
@@ -22,17 +22,17 @@ class DelayManager:
                 while self.status == 'pause':
                     sleep(1)
                     print('pause on')
+            if isCalibPass():
+                return secs
+            if breakCondition() and secs >= minTime:
+                return secs
+            if self.gui.is_auto_ok:
+                clickOK()
+
             secs += 1
             message = createMessage(text, c)
             self.gui.generic.edit_output('', message)
             sleep(1)
-
-            if isCalibPass():
-                return secs
-
-            if breakCondition() and secs >= minTime:
-                return secs
-
         return secs
 
     def startStatus(self):
@@ -124,17 +124,11 @@ def isExposing():
 
 
 def isExposureDone():
-    x, y = isExposing()
-    if x > 0 and y > 0:
-        return False
-    return True
+    return not isExposing()
 
 
 def isExposureNotDone():
-    x, y = isExposing()
-    if x > 0 and y > 0:
-        return True
-    return False
+    return isExposing()
 
 
 def isCalibPass():
