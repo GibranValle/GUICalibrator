@@ -1,7 +1,6 @@
-from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox, CTkSwitch
+from customtkinter import CTkFrame, CTkButton, CTkLabel, CTkOptionMenu, CTkSwitch
 from util import menu_list as m
 from classes.constants import *
-from classes.generic import *
 from calibrations.maFullCalib import mAFullCalibration
 from calibrations.exposureCalibration import *
 from threading import Thread

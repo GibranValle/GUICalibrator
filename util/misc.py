@@ -23,6 +23,7 @@ def moveN2Click(x, y):
         click(x, y)
         sleep(0.25)
         click(x, y)
+        sleep(0.25)
 
 
 def advancedClick(x, y):

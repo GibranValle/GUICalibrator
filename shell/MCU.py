@@ -3,25 +3,14 @@ from shell.generic import openApp, process_exists, changeWindow
 from util.location.RU_MUTL import *
 from util.location.MCU import *
 from util.misc import moveNclick
-from util.location.AWS import okExposure
-from threading import Thread
-from calibrations.exposureCalibration import defectSolidCalib
+
 import customtkinter as ck
+
 
 def openMUTLMCU():
     if process_exists('MUTL.exe'):
         return changeWindow('MCU0')
     openApp('MCU')
-
-
-def waitThread(gui_object: ck.CTk = None, calib_name=''):
-    label = gui_object.label
-    gui_object.delay.waitTillOk(0, 10 * 60, label)
-    x, y = okExposure()
-    moveNclick(x, y)
-    gui_object.delay.waitTillOk(0, 20, label)
-    if calib_name == 'defect solid':
-        defectSolidCalib()
 
 
 def openCalibrationMenu():
@@ -73,7 +62,6 @@ def startDefectSolidCalib(gui_object: ck.CTk = None):
     x, y = defectSolid()
     moveNclick(x, y)
     enable_calib_button()
-    Thread(target=waitThread, args=[gui_object, 'defect solid'], daemon=True).start()
 
 
 def startPixelDefectCalib():
@@ -81,6 +69,7 @@ def startPixelDefectCalib():
     openCalibrationMenu()
     x, y = pixelDefect()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startShadingCalib():
@@ -88,6 +77,7 @@ def startShadingCalib():
     openCalibrationMenu()
     x, y = shading()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startUniformityCalib():
@@ -95,6 +85,7 @@ def startUniformityCalib():
     openCalibrationMenu()
     x, y = shading()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startDefectSolidStereoCalib():
@@ -102,6 +93,7 @@ def startDefectSolidStereoCalib():
     openCalibrationMenu()
     x, y = defectSolidStereo()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startDefectSolidBpyCalib():
@@ -109,6 +101,7 @@ def startDefectSolidBpyCalib():
     openCalibrationMenu()
     x, y = defectSolidBpy()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startDefectSolidTomoCalib():
@@ -116,6 +109,7 @@ def startDefectSolidTomoCalib():
     openCalibrationMenu()
     x, y = defectSolidTomo()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startUniformityStereoCalib():
@@ -123,6 +117,7 @@ def startUniformityStereoCalib():
     openCalibrationMenu()
     x, y = offset()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startUniformityBpyCalib():
@@ -130,6 +125,7 @@ def startUniformityBpyCalib():
     openCalibrationMenu()
     x, y = uniformityBpy()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startUniformityTomoCalib():
@@ -137,6 +133,7 @@ def startUniformityTomoCalib():
     openCalibrationMenu()
     x, y = uniformityTomo()
     moveNclick(x, y)
+    enable_calib_button()
 
 
 def startUniformityESCalib():
@@ -144,3 +141,4 @@ def startUniformityESCalib():
     openCalibrationMenu()
     x, y = uniformityES()
     moveNclick(x, y)
+    enable_calib_button()

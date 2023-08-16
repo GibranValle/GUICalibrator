@@ -1,78 +1,131 @@
-from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox
+from customtkinter import CTkFrame, CTkButton, CTkLabel, CTkOptionMenu
 from util import menu_list as m
 from classes.constants import *
+from calibrations.exposureCalibration import *
+from calibrations.allExposureNeeded import allRequired
+from shell.MCU import *
+from threading import Thread
 
 
-def menu_change(self, option):
-    if option == 'Calibration':
-        self.menu_calib.configure(values=m.calib_menu)
-        self.menu_calib.set(m.calib_menu[0])
-    elif option == 'Opt Calibrations':
-        self.menu_calib.configure(values=m.calib_opt_menu)
-        self.menu_calib.set(m.calib_opt_menu[0])
+class Auto:
 
+    def __init__(self, gui_object: ck):
+        self.gui = gui_object
 
-def pushed(self, button):
-    self.status = button
-    if button == 'pause':
-        print('paused')
-        self.start_button.configure(state='normal')
-        self.pause_button.configure(state='disabled')
-        self.stop_button.configure(state='normal')
-        return
+    def only_start(self):
+        gui = self.gui
+        gui.start_button_m.configure(state='normal')
+        gui.pause_button_m.configure(state='disabled')
+        gui.stop_button_m.configure(state='disabled')
 
+    def not_only_start(self):
+        gui = self.gui
+        gui.start_button_m.configure(state='disabled')
+        gui.pause_button_m.configure(state='normal')
+        gui.stop_button_m.configure(state='normal')
 
-    elif button == 'start':
-        self.start_button.configure(state='disabled')
-        self.pause_button.configure(state='normal')
-        self.stop_button.configure(state='normal')
-        print('RUNNING')
-        return
+    def only_stop(self):
+        gui = self.gui
+        gui.start_button_m.configure(state='disabled')
+        gui.pause_button_m.configure(state='disabled')
+        gui.stop_button_m.configure(state='normal')
 
-    elif button == 'stop':
-        print('NOT RUNNING')
-        self.start_button.configure(state='normal')
-        self.pause_button.configure(state='disabled')
-        self.stop_button.configure(state='disabled')
+    def not_only_pause(self):
+        gui = self.gui
+        gui.start_button_m.configure(state='normal')
+        gui.pause_button_m.configure(state='disabled')
+        gui.stop_button_m.configure(state='normal')
 
+    def menu_change(self, option):
+        print(option)
+        if option == 'Calibration':
+            self.gui.menu_calib.configure(values=m.calib_menu)
+            self.gui.menu_calib.set(m.calib_menu[0])
+        elif option == 'Opt Calibrations':
+            self.gui.menu_calib.configure(values=m.calib_opt_menu)
+            self.gui.menu_calib.set(m.calib_opt_menu[0])
 
-def create_auto_frame(self):
-    self.frame_auto = CTkFrame(self, fg_color=BG_COLOR_1)
-    self.label_auto = CTkLabel(self.frame_auto, text='Auto Mode', font=self.font_title)
-    self.label_auto.pack(pady=5, padx=20)
+    def pushed(self, button):
+        gui = self.gui
+        self.status = button
 
-    self.menu_auto = CTkOptionMenu(self.frame_auto, values=m.auto_menu, font=self.font_text, command=lambda option: menu_change(self, option))
-    self.menu_auto.pack(pady=5, padx=20, fill='x')
+        if button == 'pause':
+            gui.delay.pauseStatus()
+            self.not_only_pause()
+            return
 
-    self.menu_calib = CTkOptionMenu(self.frame_auto, values=m.calib_menu, font=self.font_text)
-    self.menu_calib.set(m.calib_menu[0])
-    self.menu_calib.pack(pady=5, padx=20, fill='x')
+        elif button == 'stop':
+            gui.delay.stopStatus()
+            self.only_start()
 
-    self.enable_calib = CTkButton(self.frame_auto, command=self.generic.open_serial_config, font=self.font_text,
-                                  text='Enable calib', text_color_disabled=DISABLED_COLOR)
-    self.enable_calib.pack(pady=5, padx=20, fill='x')
+        elif button == 'start':
+            option = self.gui.menu_calib.get()
+            if option in m.exp_calib_menu or option in m.calib_opt_menu:
+                if gui.delay.status == 'pause':
+                    gui.delay.startStatus()
+                    return
+                Thread(target=allRequired, args=[gui], daemon=True).start()
 
-    self.frame_buttons = CTkFrame(self.frame_auto, fg_color=BG_COLOR_1)
-    self.frame_buttons.pack(pady=5, padx=20, fill='x')
+            else:
+                return
+            gui.delay.startStatus()
 
-    self.start_button = CTkButton(self.frame_buttons, command=lambda: pushed(self, 'start'), font=self.font_text, width=WIDTH_3,
-                                  text=PLAY, text_color_disabled=DISABLED_COLOR)
-    self.start_button.grid(row=0, column=1)
+    def enableCalib(self):
+        gui = self.gui
+        option = self.gui.menu_calib.get()
+        if option == 'offset':
+            startOffsetCalib()
+        elif option == 'defect':
+            startDefectCalib()
+        elif option == 'defect solid':
+            startDefectSolidCalib()
 
-    self.pause_button = CTkButton(self.frame_buttons, command=lambda: pushed(self, 'pause'), font=self.font_text, width=WIDTH_3,
-                                  text=PAUSE, state='disabled', text_color_disabled=DISABLED_COLOR, fg_color=OK_COLOR, hover_color=OK_COLOR_HOVER)
-    self.pause_button.grid(row=0, column=2, padx=20)
+    def create_auto_frame(self):
+        gui = self.gui
 
-    self.stop_button = CTkButton(self.frame_buttons, command=lambda: pushed(self, 'stop'), font=self.font_text, width=WIDTH_3,
-                                 text=STOP, state='disabled', text_color_disabled=DISABLED_COLOR, fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
-    self.stop_button.grid(row=0, column=3)
+        gui.frame_auto = CTkFrame(gui, fg_color=BG_COLOR_1)
+        gui.label_auto = CTkLabel(gui.frame_auto, text='Auto Mode', font=gui.font_title)
+        gui.label_auto.pack(pady=5, padx=20)
 
-    self.label_output1 = CTkLabel(self.frame_auto, text='M1:', font=self.font_output, anchor='w')
-    self.label_output1.pack(pady=(3, 0), padx=20, fill='x')
+        gui.menu_auto = CTkOptionMenu(gui.frame_auto, values=m.auto_menu, font=gui.font_text,
+                                      command=lambda option: self.menu_change(option))
+        gui.menu_auto.pack(pady=5, padx=20, fill='x')
 
-    self.label_output2 = CTkLabel(self.frame_auto, text='M2:', font=self.font_output, anchor='w')
-    self.label_output2.pack(pady=(3, 5), padx=20, fill='x')
+        gui.menu_calib = CTkOptionMenu(gui.frame_auto, values=m.calib_menu, font=gui.font_text)
+        gui.menu_calib.set(m.calib_menu[0])
+        gui.menu_calib.pack(pady=5, padx=20, fill='x')
 
-    self.main_menu = CTkButton(self.frame_auto, command=self.generic.back2main, font=self.font_text, text='Main menu',
-                               fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
-    self.main_menu.pack(pady=(5, 3), padx=10)
+        gui.enable_calib = CTkButton(gui.frame_auto, command=self.enableCalib, font=gui.font_text,
+                                     text='Enable calib', text_color_disabled=DISABLED_COLOR)
+        gui.enable_calib.pack(pady=5, padx=20, fill='x')
+
+        gui.frame_buttons = CTkFrame(gui.frame_auto, fg_color=BG_COLOR_1)
+        gui.frame_buttons.pack(pady=5, padx=20, fill='x')
+
+        gui.start_button = CTkButton(gui.frame_buttons, command=lambda: self.pushed('start'), font=gui.font_text,
+                                     width=WIDTH_3,
+                                     text=PLAY, text_color_disabled=DISABLED_COLOR)
+        gui.start_button.grid(row=0, column=1)
+
+        gui.pause_button = CTkButton(gui.frame_buttons, command=lambda: self.pushed('pause'), font=gui.font_text,
+                                     width=WIDTH_3,
+                                     text=PAUSE, state='disabled', text_color_disabled=DISABLED_COLOR,
+                                     fg_color=OK_COLOR, hover_color=OK_COLOR_HOVER)
+        gui.pause_button.grid(row=0, column=2, padx=20)
+
+        gui.stop_button = CTkButton(gui.frame_buttons, command=lambda: self.pushed('stop'), font=gui.font_text,
+                                    width=WIDTH_3,
+                                    text=STOP, state='disabled', text_color_disabled=DISABLED_COLOR,
+                                    fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
+        gui.stop_button.grid(row=0, column=3)
+
+        gui.label_output1 = CTkLabel(gui.frame_auto, text='M1:', font=gui.font_output, anchor='w')
+        gui.label_output1.pack(pady=(3, 0), padx=20, fill='x')
+
+        gui.label_output2 = CTkLabel(gui.frame_auto, text='M2:', font=gui.font_output, anchor='w')
+        gui.label_output2.pack(pady=(3, 5), padx=20, fill='x')
+
+        gui.main_menu = CTkButton(gui.frame_auto, command=gui.generic.back2main, font=gui.font_text,
+                                  text='Main menu',
+                                  fg_color=ERR_COLOR, hover_color=ERR_COLOR_HOVER)
+        gui.main_menu.pack(pady=(5, 3), padx=10)

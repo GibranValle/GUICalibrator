@@ -53,8 +53,11 @@ class Generic:
     def edit_output(self, msg1='', msg2=''):
         if msg1 != '':
             self.gui.label_output1_m.configure(text=msg1)
+            self.gui.label_output1.configure(text=msg1)
+
         if msg2 != '':
             self.gui.label_output2_m.configure(text=msg2)
+            self.gui.label_output2.configure(text=msg2)
 
     def clear_output(self):
         self.edit_output(' ', ' ')
