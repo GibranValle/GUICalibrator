@@ -42,21 +42,21 @@ def openCalibrationOptMenu():
     moveNclick(x, y)
 
 
-def startOffsetCalib():
+def click_offset_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = offset()
     moveNclick(x, y)
 
 
-def startDefectCalib():
+def click_defect_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = defect()
     moveNclick(x, y)
 
 
-def startDefectSolidCalib(gui_object: ck.CTk = None):
+def click_defect_solid_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolid()
@@ -64,7 +64,7 @@ def startDefectSolidCalib(gui_object: ck.CTk = None):
     enable_calib_button()
 
 
-def startPixelDefectCalib():
+def click_pixel_defect_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = pixelDefect()
@@ -72,7 +72,7 @@ def startPixelDefectCalib():
     enable_calib_button()
 
 
-def startShadingCalib():
+def click_shading_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = shading()
@@ -80,7 +80,7 @@ def startShadingCalib():
     enable_calib_button()
 
 
-def startUniformityCalib():
+def click_uniformity_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = shading()
@@ -88,7 +88,7 @@ def startUniformityCalib():
     enable_calib_button()
 
 
-def startDefectSolidStereoCalib():
+def click_defect_solid_stereo_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolidStereo()
@@ -96,7 +96,7 @@ def startDefectSolidStereoCalib():
     enable_calib_button()
 
 
-def startDefectSolidBpyCalib():
+def click_defect_solid_bpy_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolidBpy()
@@ -104,7 +104,7 @@ def startDefectSolidBpyCalib():
     enable_calib_button()
 
 
-def startDefectSolidTomoCalib():
+def click_defect_solid_tomo_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = defectSolidTomo()
@@ -112,7 +112,7 @@ def startDefectSolidTomoCalib():
     enable_calib_button()
 
 
-def startUniformityStereoCalib():
+def click_uniformity_stereo_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = offset()
@@ -120,7 +120,7 @@ def startUniformityStereoCalib():
     enable_calib_button()
 
 
-def startUniformityBpyCalib():
+def click_uniformity_bpy_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = uniformityBpy()
@@ -128,7 +128,7 @@ def startUniformityBpyCalib():
     enable_calib_button()
 
 
-def startUniformityTomoCalib():
+def click_uniformity_tomo_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = uniformityTomo()
@@ -136,7 +136,7 @@ def startUniformityTomoCalib():
     enable_calib_button()
 
 
-def startUniformityESCalib():
+def click_uniformity_es_calib():
     openMUTLMCU()
     openCalibrationMenu()
     x, y = uniformityES()

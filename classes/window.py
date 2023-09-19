@@ -43,40 +43,40 @@ def windowOptions(option):
         enable_ment()
 
     elif 'offset' in option:
-        startOffsetCalib()
+        click_offset_calib()
 
     elif 'defect' in option:
-        startDefectCalib()
+        click_defect_calib()
 
     elif 'defect solid' in option:
-        startDefectCalib()
+        click_defect_calib()
 
     elif 'pixel defect' in option:
-        startPixelDefectCalib()
+        click_pixel_defect_calib()
 
     elif 'shading' in option:
-        startShadingCalib()
+        click_shading_calib()
 
     elif 'uniformity' in option:
-        startUniformityCalib()
+        click_uniformity_calib()
 
     elif 'defect solid stereo' in option:
-        startDefectSolidCalib()
+        click_defect_solid_calib()
 
     elif 'defect solid biopsy' in option:
-        startDefectSolidBpyCalib()
+        click_defect_solid_bpy_calib()
 
     elif 'defect solid tomo' in option:
-        startDefectSolidTomoCalib()
+        click_defect_solid_tomo_calib()
 
     elif 'x-ray uniformity stereo' in option:
-        startUniformityStereoCalib()
+        click_uniformity_stereo_calib()
 
     elif 'x-ray uniformity biopsy' in option:
-        startUniformityBpyCalib()
+        click_uniformity_bpy_calib()
 
     elif 'x-ray uniformity tomo' in option:
-        startUniformityTomoCalib()
+        click_uniformity_tomo_calib()
 
     elif 'x-ray uniformity ES' in option:
-        startUniformityESCalib()
+        click_uniformity_es_calib()

@@ -52,12 +52,12 @@ class Generic:
 
     def edit_output(self, msg1='', msg2=''):
         if msg1 != '':
-            self.gui.label_output1_m.configure(text=msg1)
-            self.gui.label_output1.configure(text=msg1)
+            self.gui.label_output1_man.configure(text=msg1)
+            self.gui.label_output1_auto.configure(text=msg1)
 
         if msg2 != '':
-            self.gui.label_output2_m.configure(text=msg2)
-            self.gui.label_output2.configure(text=msg2)
+            self.gui.label_output2_man.configure(text=msg2)
+            self.gui.label_output2_auto.configure(text=msg2)
 
     def clear_output(self):
         self.edit_output(' ', ' ')
@@ -115,4 +115,3 @@ class Generic:
     def count(self, exposures):
         text1 = f'Exposures count: {exposures}'
         self.edit_output(text1)
-

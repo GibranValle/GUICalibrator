@@ -1,4 +1,4 @@
-from time import  sleep
+from time import sleep
 from util.serialCOM import communicate
 import customtkinter as ck
 
@@ -45,61 +45,6 @@ def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
         return
 
     gui.generic.exposure_done(total, 'Calibration')
-
-
-def defectSolidCalib(gui_object: ck.CTk = None):
-    exposures = 1
-    genericCalibration('defect-solid', exposures, gui_object)
-
-
-def pixedDefectCalib(gui_object: ck.CTk = None):
-    exposures = 1
-    genericCalibration('pixel-defect', exposures, gui_object)
-
-
-def shadingCalib(gui_object: ck.CTk = None):
-    exposures = 44
-    genericCalibration('shading', exposures, gui_object)
-
-
-def uniformityCalib(gui_object: ck.CTk = None):
-    exposures = 7
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def defectSolidStereoCalib(gui_object: ck.CTk = None):
-    exposures = 2
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def defectSolidBpyCalib(gui_object: ck.CTk = None):
-    exposures = 4
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def defectSolidTomoCalib(gui_object: ck.CTk = None):
-    exposures = 2
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def uniformityCalibStereo(gui_object: ck.CTk = None):
-    exposures = 2
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def uniformityCalibBpy(gui_object: ck.CTk = None):
-    exposures = 4
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def uniformityCalibTomo(gui_object: ck.CTk = None):
-    exposures = 2
-    genericCalibration('uniformity', exposures, gui_object)
-
-
-def uniformityCalibES(gui_object: ck.CTk = None):
-    exposures = 2
-    genericCalibration('uniformity', exposures, gui_object)
 
 
 def singleShot(gui_object: ck.CTk = None):

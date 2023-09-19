@@ -5,6 +5,7 @@ from classes.generic import createMessage
 from util.location.AWS import stdbyIcon, blockedIcon, isExposing, okExposure, pasarIcon, saltarIcon, exposureIcon
 from shell.AWS import clickOK
 
+
 class DelayManager:
     def __init__(self, gui_object: ck):
         self.status = 'stop'
@@ -68,6 +69,13 @@ class DelayManager:
         minTime = 0
         breakCondition = isStdBy
         text = 'Waiting for standby'
+        secs = self._generic_counter(init, final, minTime, breakCondition, text)
+        return secs
+
+    def waitTillPass(self, init: int, final: int):
+        minTime = 0
+        breakCondition = isCalibPass
+        text = 'Waiting for Pass'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         return secs
 
