@@ -1,19 +1,8 @@
 # Default ignored files
 /shelf/
 
-/workspace.xml
-/macList.txt
-
-# directories
-/dist/
-/build/
-# ignores all .md files
-.md
-
-# does not ignore the README.md file
-!README.md
 
 #ignore all .spec files
-.spec
-/calibrationBot.spec
-/setup.ini
+/build
+/build/calibrationBot
+/dist

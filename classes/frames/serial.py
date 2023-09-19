@@ -21,12 +21,12 @@ def toggle_serial(self):
     if com.isListening:
         com.endListening()
         self.button_serial.configure(text='Open serial port')
-        self.label_serial_main.configure(text_color='red', text='Offline')
+        self.serial_label.configure(text_color='red', text='Offline')
         return
 
     serialThread = Thread(target=com.startListening)
     serialThread.start()
     sleep(1.5)
     if com.isListening:
-        self.label_serial_main.configure(text_color='green', text='Online')
+        self.serial_label.configure(text_color='green', text='Online')
         self.button_serial.configure(text='Close serial port')
