@@ -89,6 +89,7 @@ class Manual:
 
         elif button == 'stop':
             gui.delay.stopStatus()
+            gui.delay.stopStatus()
             self.only_start()
 
     def create_manual_frame(self):

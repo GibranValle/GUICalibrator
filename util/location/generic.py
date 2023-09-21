@@ -33,7 +33,3 @@ def genericCoordinatesCenter(name, confidence=0.95):
 
     except TypeError:
         return x, y
-
-
-
-

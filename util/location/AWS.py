@@ -1,15 +1,15 @@
 from util.location.generic import genericCoordinatesCenter
 
 
-def isExposing():
+def exposureIconLarge():
     return genericCoordinatesCenter('ff/xray_exposing')
 
 
+# AWS
 def exposureIcon():
     return genericCoordinatesCenter('aws/xray_exposure')
 
 
-# AWS
 def blockedIcon():
     return genericCoordinatesCenter('aws/xray_blocked')
 
@@ -22,12 +22,20 @@ def okExposure():
     return genericCoordinatesCenter('aws/ok')
 
 
+def okExposure_green():
+    return genericCoordinatesCenter('aws/ok2')
+
+
 def calib_button():
     return genericCoordinatesCenter('aws/calib_button')
 
 
 def fieldCalib():
     return genericCoordinatesCenter('aws/fieldcalib_button')
+
+
+def calibracionIcon():
+    return genericCoordinatesCenter('aws/calibracion')
 
 
 def pasarIcon():

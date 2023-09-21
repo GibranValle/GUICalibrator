@@ -18,6 +18,10 @@ def mAFullCalibration(gui_object: ck.CTk = None):
     time = gui.delay.countdown(0, text, 10)
     total += time
     if time < 10:
+        text1 = 'App failure detected'
+        text2 = 'Please verify'
+        edit_output(text1, text2)
+        gui.delay.stopStatus()
         return gui.generic.abort_requested()
 
     # REQUEST FOR LONG EXPOSURE
@@ -25,17 +29,17 @@ def mAFullCalibration(gui_object: ck.CTk = None):
         return not_responding()
     gui.generic.accepted('LONG')
 
-    time = gui.delay.waitTillStartYellow(10)
+    time = gui.delay.wait_for_exposure_signal(10)
     total += time
     if time >= 9:
         text1 = 'Exposure request failure'
         text2 = 'Verify CN2 Connector'
         edit_output(text1, text2)
-        gui.isRunning = False
+        gui.delay.stopStatus()
         return
 
     gui.generic.under_exposure()
-    time = gui.delay.waitTillEndYellow(5 * 60, 0)
+    time = gui.delay.wait_for_long_end(5 * 60, 0)
     if time == -1:
         return gui.generic.aborted()
 

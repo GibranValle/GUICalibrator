@@ -16,3 +16,8 @@ DISABLED_COLOR = '#555555'
 PLAY = u'\u23F5'
 PAUSE = u'\u23F8'
 STOP = u'\u23F9'
+
+max_exposure_duration = 15
+prep_exp_time = 1200
+scale_factor = 0.75
+time_between_exposures = 30

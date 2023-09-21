@@ -39,17 +39,21 @@ class Auto:
         self.status = button
 
         if button == 'pause':
+            print('push pause')
             gui.delay.pauseStatus()
             self.not_only_pause()
             return
 
         elif button == 'stop':
+            print('push stoped')
             gui.delay.stopStatus()
             self.only_start()
 
         elif button == 'start':
+            print('push start')
             size = len(gui.selected)
             if size > 0:
+                gui.delay.startStatus()
                 print('start')
                 self.not_only_start()
                 Thread(target=startAutomaticCalib, args=[self.gui], daemon=True).start()

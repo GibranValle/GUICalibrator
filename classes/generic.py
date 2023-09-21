@@ -107,7 +107,7 @@ class Generic:
         text1 = f'Accepted {kind} exposure'
         self.edit_output(text1)
 
-    def exposure_done_exp(self, total, exposures):
+    def exposure_done_counter(self, total, exposures):
         text1 = 'Calibration passed!'
         text2 = createMessage('Time', total)
         self.edit_output(text1, text2 + f' exposures: {exposures}')

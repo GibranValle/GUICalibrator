@@ -2,7 +2,8 @@ from time import sleep
 from customtkinter import CTk as ck
 
 from classes.generic import createMessage
-from util.location.AWS import stdbyIcon, blockedIcon, isExposing, okExposure, pasarIcon, saltarIcon, exposureIcon
+from util.location.AWS import stdbyIcon, blockedIcon, okExposure, pasarIcon, saltarIcon, exposureIcon, \
+    exposureIconLarge, calibracionIcon, okExposure_green
 from shell.AWS import clickOK
 
 
@@ -11,7 +12,15 @@ class DelayManager:
         self.status = 'stop'
         self.gui = gui_object
 
-    def _generic_counter(self, init: int, final: int, minTime: int, breakCondition, text: str):
+    def _generic_counter(self, init: int, final: int, minTime: int, breakCondition, text: str,
+                         wait_calib_pass: bool = True):
+
+        if self.status == 'stop':
+            print('status stoped in delay manager')
+            return -1
+
+        print('not visible if stoped')
+
         count = range(init, final + 1)
         if final < init:
             count = range(init, final - 1, -1)
@@ -23,7 +32,7 @@ class DelayManager:
                 while self.status == 'pause':
                     sleep(1)
                     print('pause on')
-            if isCalibPass():
+            if isCalibPass() and wait_calib_pass:
                 return secs
             if breakCondition() and secs >= minTime:
                 return secs
@@ -34,6 +43,7 @@ class DelayManager:
             message = createMessage(text, c)
             self.gui.generic.edit_output('', message)
             sleep(1)
+            print(f'returning secs: {secs}')
         return secs
 
     def startStatus(self):
@@ -51,60 +61,71 @@ class DelayManager:
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         return secs
 
-    def waitTillEnd(self, init: int, final: int):
+    def wait_for_block_signal(self, init: int, final: int):
         minTime = 0
         breakCondition = isBlocked
         text = 'Waiting for blocked'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         return secs
 
-    def waitTillExposing(self, init: int, final: int):
+    def wait_for_exposure_signal(self, init: int, final: int):
         minTime = 0
         breakCondition = isExposing
         text = 'Waiting for exposure'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         return secs
 
-    def waitTillReady(self, init: int, final: int):
+    def wait_for_stdby_signal(self, init: int, final: int):
         minTime = 0
         breakCondition = isStdBy
         text = 'Waiting for standby'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         return secs
 
-    def waitTillPass(self, init: int, final: int):
-        minTime = 0
-        breakCondition = isCalibPass
-        text = 'Waiting for Pass'
-        secs = self._generic_counter(init, final, minTime, breakCondition, text)
-        return secs
-
-    def waitTillStartYellow(self, final: int, init: int = 0):
-        minTime = 5
-        breakCondition = isExposureNotDone
-        text = 'Wait for exposure'
-        secs = self._generic_counter(init, final, minTime, breakCondition, text)
-        return secs
-
-    def waitTillEndYellow(self, final: int, init: int):
+    def wait_for_long_end(self, final: int, init: int):
         minTime = 20
         breakCondition = isExposureDone
         text = 'Wait for end'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         return secs
 
-    def waitTillOk(self, final: int, init: int):
+    def wait_for_calib_signal(self, init: int, final: int):
+        minTime = 0
+        breakCondition = isCalibratingFPD
+        text = 'Waiting for Calib start'
+        secs = self._generic_counter(init, final, minTime, breakCondition, text, wait_calib_pass=False)
+        print(f'counted: {secs}')
+        return secs
+
+    def wait_for_calib_pass(self, init: int, final: int):
+        minTime = 0
+        breakCondition = isCalibPass
+        text = 'Waiting for Pass'
+        secs = self._generic_counter(init, final, minTime, breakCondition, text)
+        return secs
+
+    def wait_for_ok_button(self, final: int, init: int):
         minTime = 1
         breakCondition = isWaitingOk
         text = 'Wait for ok button'
-        secs = self._generic_counter(init, final, minTime, breakCondition, text)
+        secs = self._generic_counter(init, final, minTime, breakCondition, text, wait_calib_pass=False)
         return secs
 
 
 # --------------------------- AUXILIARY -----------------------------------------------------------
 
+def isCalibratingFPD():
+    x, y = calibracionIcon()
+    if x > 0 and y > 0:
+        return True
+    return False
+
+
 def isWaitingOk():
     x, y = okExposure()
+    if x > 0 and y > 0:
+        return True
+    x, y = okExposure_green()
     if x > 0 and y > 0:
         return True
     return False
@@ -126,6 +147,9 @@ def isBlocked():
 
 def isExposing():
     x, y = exposureIcon()
+    if x > 0 and y > 0:
+        return True
+    x, y = exposureIconLarge()
     if x > 0 and y > 0:
         return True
     return False

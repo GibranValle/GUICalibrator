@@ -1,7 +1,7 @@
 from time import sleep
 from util.serialCOM import communicate
 import customtkinter as ck
-
+from classes.constants import prep_exp_time, scale_factor, max_exposure_duration
 
 def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
     gui = gui_object
@@ -9,6 +9,7 @@ def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
     gui.delay.startStatus()
     pause = 30
     total = 0
+
     gui.generic.clear_output()
 
     for i in range(1, exposures + 1):
@@ -24,7 +25,16 @@ def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
 
         text1 = f'Requested exposure {i} of {exposures}'
         gui.generic.edit_output(text1)
-        total += gui.delay.waitTillEnd(1, duration)
+
+        time = gui.delay.wait_for_stdby_signal(1, prep_exp_time)
+        if time >= prep_exp_time * scale_factor:
+            return gui.generic.abnormal()
+        total += time
+
+        time += gui.delay.wait_for_block_signal(1, duration)
+        if time > max_exposure_duration * scale_factor:
+            return gui.generic.abnormal()
+        total += time
 
         if not communicate("X"):
             return gui.generic.not_responding()
@@ -34,7 +44,7 @@ def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
 
         if exposures > 1:
             gui.generic.request_end()
-            total += gui.delay.waitTillReady(1, pause)
+            total += gui.delay.wait_for_stdby_signal(1, pause)
 
     if gui.delay.status == 'stop':
         return gui.generic.abort_requested()
