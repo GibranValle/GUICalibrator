@@ -29,7 +29,7 @@ def mAFullCalibration(gui_object: ck.CTk = None):
         return not_responding()
     gui.generic.accepted('LONG')
 
-    time = gui.delay.wait_for_exposure_signal(10)
+    time = gui.delay.wait_for_exposure_signal(0, 10)
     total += time
     if time >= 9:
         text1 = 'Exposure request failure'

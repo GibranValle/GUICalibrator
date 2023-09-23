@@ -1,6 +1,5 @@
 from time import sleep
 from customtkinter import CTk as ck
-
 from classes.generic import createMessage
 from util.location.AWS import stdbyIcon, blockedIcon, okExposure, pasarIcon, saltarIcon, exposureIcon, \
     exposureIconLarge, calibracionIcon, okExposure_green
@@ -43,7 +42,6 @@ class DelayManager:
             message = createMessage(text, c)
             self.gui.generic.edit_output('', message)
             sleep(1)
-            print(f'returning secs: {secs}')
         return secs
 
     def startStatus(self):
