@@ -3,6 +3,7 @@
 
 
 #ignore all .spec files
+/.idea/GUI.iml
 /build
 /build/calibrationBot
-/dist
+dist/calibrationBot.exe
