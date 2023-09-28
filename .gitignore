@@ -7,3 +7,9 @@
 /build
 /build/calibrationBot
 dist/calibrationBot.exe
+/dist
+/dist/img/
+
+*.spec
+macList.txt
+setup.ini

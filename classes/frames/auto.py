@@ -2,12 +2,12 @@ from customtkinter import CTkFrame, CTkButton, CTkLabel
 from classes.constants import *
 from shell.MCU import *
 from threading import Thread
-from calibrations.automaticCalibrations import startAutomaticCalib
+from calibrations.automaticCalibrations import autoCalibLoop
 
 
 class Auto:
 
-    def __init__(self, gui_object: ck):
+    def __init__(self, gui_object):
         self.gui = gui_object
 
     def only_start(self):
@@ -56,7 +56,7 @@ class Auto:
                 gui.delay.startStatus()
                 print('start')
                 self.not_only_start()
-                Thread(target=startAutomaticCalib, args=[self.gui], daemon=True).start()
+                Thread(target=autoCalibLoop, args=[self.gui], daemon=True).start()
             else:
                 gui.generic.edit_output('No calib selected!', 'Please select options')
 

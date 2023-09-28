@@ -15,6 +15,7 @@ def changeWindow(name):
                 w.SetForegroundWindow(hwnd)
                 w.ShowWindow(hwnd, c.SW_NORMAL)
 
+    print(f'Window {name} opened...')
     w.EnumWindows(handler, name)
     sleep(1)
 
@@ -38,6 +39,7 @@ def openApp(appName):
             route = 'C:\Program Files\FujiFilm\FCR\TOOL\MUTL\\'
             exe = 'MUTL'
             args = ' /IP:192.168.0.101 /RUNAME:MCU0 /TYPE:FDR-3000DRL /FCR:C:\Program Files\FujiFilm\FCR\\'
+            print(route, exe, args)
             subprocess.Popen(route + exe + args)
     except FileNotFoundError:
         printError('File not found')

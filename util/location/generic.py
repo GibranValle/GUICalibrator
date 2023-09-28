@@ -17,7 +17,7 @@ def fetch_resource(resource_path: Path) -> Path:
 """
 
 
-def genericCoordinates(name, confidence=0.9):
+def genericCoordinates(name, confidence=0.75):
     try:
         x, y, w, h = pyautogui.locateOnScreen(f'{path}/img/{name}.png', confidence=confidence)
         return x, y, w, h
@@ -25,7 +25,7 @@ def genericCoordinates(name, confidence=0.9):
         return -1, -1, -1, -1
 
 
-def genericCoordinatesCenter(name, confidence=0.95):
+def genericCoordinatesCenter(name, confidence=0.75):
     x, y = -1, -1
     try:
         x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)

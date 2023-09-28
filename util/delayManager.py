@@ -15,10 +15,7 @@ class DelayManager:
                          wait_calib_pass: bool = True):
 
         if self.status == 'stop':
-            print('status stoped in delay manager')
             return -1
-
-        print('not visible if stoped')
 
         count = range(init, final + 1)
         if final < init:
@@ -30,7 +27,6 @@ class DelayManager:
             elif self.status == 'pause':
                 while self.status == 'pause':
                     sleep(1)
-                    print('pause on')
             if isCalibPass() and wait_calib_pass:
                 return secs
             if breakCondition() and secs >= minTime:
@@ -92,7 +88,6 @@ class DelayManager:
         breakCondition = isCalibratingFPD
         text = 'Waiting for Calib start'
         secs = self._generic_counter(init, final, minTime, breakCondition, text, wait_calib_pass=False)
-        print(f'counted: {secs}')
         return secs
 
     def wait_for_calib_pass(self, init: int, final: int):

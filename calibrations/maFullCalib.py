@@ -41,10 +41,10 @@ def mAFullCalibration(gui_object: ck.CTk = None):
     gui.generic.under_exposure()
     time = gui.delay.wait_for_long_end(5 * 60, 0)
     if time == -1:
-        return gui.generic.aborted()
-
+        return gui.generic.abnormal()
     elif time < 30:
         return gui.generic.aborted()
+    total += time
 
     # REQUEST FOR EXPOSURE END
     if not communicate("X"):

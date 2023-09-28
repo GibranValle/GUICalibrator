@@ -13,18 +13,17 @@ def printSuccess(text: str):
 def moveNclick(x, y):
     x0, y0 = position()
     if x > 0 and y > 0:
-        sleep(0.5)
         click(x, y)
         moveTo(x0, y0)
 
 
 def moveN2Click(x, y):
+    x0, y0 = position()
     if x > 0 and y > 0:
-        moveTo(x, y, duration=0.5)
         click(x, y)
-        sleep(0.25)
+        sleep(0.4)
         click(x, y)
-        sleep(0.25)
+        moveTo(x0, y0)
 
 
 def advancedClick(x, y):
@@ -32,3 +31,4 @@ def advancedClick(x, y):
     if x > 0 and y > 0:
         click(x, y)
         moveTo(x0, y0)
+        return

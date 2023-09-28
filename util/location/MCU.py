@@ -2,7 +2,7 @@ from util.location.generic import genericCoordinatesCenter, genericCoordinates
 from util.misc import printError
 
 
-def search_MCU0():
+def search_MCU0_button():
     x, y = genericCoordinatesCenter('ru/MCU0')
     x1, y1 = genericCoordinatesCenter('ru/MCU0_S')
     if x > 0 and y > 0:
@@ -13,7 +13,7 @@ def search_MCU0():
         return -1, -1
 
 
-def MCU_page_0():
+def search_MCU_page_0():
     x0, y0, w, h = genericCoordinates('mutl/MCU/mcua')
     if x0 and y0 > 0:
         x = x0 + w / 2
@@ -23,7 +23,7 @@ def MCU_page_0():
     return -1, -1
 
 
-def calibration():
+def search_calibration_tab():
     x0, y0, w, h = genericCoordinates('mutl/MCU/calibration_unselected')
     if x0 and y0 > 0:
         x = x0 + w / 2
@@ -36,15 +36,16 @@ def calibration():
         return x, y
     x0, y0, w, h = genericCoordinates('mutl/MCU/calibration_selected')
     if x0 and y0 > 0:
+        print('ALREADY SELECTED')
         return 'selected', 'selected'
         # x = x0 + w / 2
         # y = y0 + h / 2
         # return x, y
-    printError('CALIBRATION BUTTON NOT FOUND')
+    printError('CALIBRATION TAB NOT FOUND')
     return -1, -1
 
 
-def calibrationOptional():
+def search_calibration_optional_tab():
     x0, y0, w, h = genericCoordinates('mutl/MCU/calibration_selected')
     if x0 and y0 > 0:
         x = x0 + 4 * w / 5
@@ -61,62 +62,62 @@ def calibrationOptional():
     #     x = x0 + (4 * w / 5)
     #     y = y0 + h / 2
     #     return x, y
-    printError('CALIBRATION OPT BUTTON NOT FOUND')
+    printError('CALIBRATION OPT TAB NOT FOUND')
     return -1, -1
 
 
 # CALIBRATION MENU
-def offset():
+def search_offset_button():
     return genericCoordinatesCenter('mutl/calib_offset')
 
 
-def defect():
+def search_defect_button():
     return genericCoordinatesCenter('mutl/calib_defect')
 
 
-def defectSolid():
+def search_defect_solid_button():
     return genericCoordinatesCenter('mutl/calib_defect_solid')
 
 
-def defectSolidStereo():
+def search_defect_solid_stereo_button():
     return genericCoordinatesCenter('mutl/calib_defect_solid_stereo')
 
 
-def defectSolidBpy():
+def search_defect_solid_Bpy():
     return genericCoordinatesCenter('mutl/calib_defect_solid_bpy')
 
 
-def defectSolidTomo():
+def search_defect_solid_tomo_button():
     return genericCoordinatesCenter('mutl/calib_defect_solid_tomo')
 
 
-def pixelDefect():
+def search_pixel_defect_button():
     return genericCoordinatesCenter('mutl/calib_pixel_defect')
 
 
-def shading():
+def search_shading_button():
     return genericCoordinatesCenter('mutl/calib_shading')
 
 
-def uniformity():
+def search_uniformity_button():
     return genericCoordinatesCenter('mutl/calib_uniformity')
 
 
-def uniformityStereo():
+def search_uniformity_stereo_button():
     return genericCoordinatesCenter('mutl/calib_uniformity_stereo')
 
 
-def uniformityBpy():
+def search_uniformity_bpy_button():
     return genericCoordinatesCenter('mutl/calib_uniformity_bpy')
 
 
-def uniformityTomo():
+def search_uniformity_tomo_button():
     return genericCoordinatesCenter('mutl/calib_uniformity_tomo')
 
 
-def uniformityES():
+def search_uniformity_ES_button():
     return genericCoordinatesCenter('mutl/calib_uniformity_es')
 
 
-def sensitivity():
+def search_sensitivity_button():
     return genericCoordinatesCenter('mutl/calib_sensitivity')

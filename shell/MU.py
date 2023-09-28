@@ -1,5 +1,5 @@
 from util.location.MU import MU_page_0, search_calibration_MU, search_generator_MU, search_toggle_MAG, \
-    search_enable_ment, search_toggle_HVL, search_calib_button, search_field_button
+    search_enable_ment, search_toggle_HVL
 from util.location.RU_MUTL import right
 from shell.generic import openApp, process_exists, changeWindow
 from util.misc import printError, moveNclick, moveN2Click
@@ -43,13 +43,6 @@ def toggle_HVL():
     if x and y > 0:
         moveNclick(x, y)
     printError('TOGGLE HVL BUTTON NOT FOUND')
-
-
-def enable_calib_button():
-    x, y = search_calib_button()
-    moveN2Click(x, y)
-    x, y = search_field_button()
-    moveNclick(x, y)
 
 
 def openCalibrationMUMenu():

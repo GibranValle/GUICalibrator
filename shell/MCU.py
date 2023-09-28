@@ -1,26 +1,25 @@
-from shell.MU import enable_calib_button
 from shell.generic import openApp, process_exists, changeWindow
 from util.location.RU_MUTL import *
 from util.location.MCU import *
 from util.misc import moveNclick
 
-import customtkinter as ck
-
 
 def openMUTLMCU():
     if process_exists('MUTL.exe'):
-        return changeWindow('MCU0')
+        changeWindow('MCU0')
+        return
+    printError('MUTL.exe not running')
     openApp('MCU')
 
 
 def openCalibrationMenu():
     # is MCU FIRST PAGE?
-    x, y = MCU_page_0()
+    x, y = search_MCU_page_0()
     if x > 0 and y > 0:
         # NO FIRST PAGE, CHANGE TO NEXT
         x, y = right()
         moveNclick(x, y)
-    x, y = calibration()
+    x, y = search_calibration_tab()
     if x == 'selected':
         print('Already selected')
         return
@@ -29,13 +28,13 @@ def openCalibrationMenu():
 
 def openCalibrationOptMenu():
     # is MCU FIRST PAGE?
-    x, y = MCU_page_0()
+    x, y = search_MCU_page_0()
     if x > 0 and y > 0:
         # NO FIRST PAGE, CHANGE TO NEXT
         x, y = right()
         moveNclick(x, y)
     # NO CALIB SELECTED
-    x, y = calibrationOptional()
+    x, y = search_calibration_optional_tab()
     if x == 'selected':
         print('Already selected')
         return
@@ -45,100 +44,89 @@ def openCalibrationOptMenu():
 def click_offset_calib():
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = offset()
+    x, y = search_offset_button()
     moveNclick(x, y)
 
 
 def click_defect_calib():
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = defect()
+    x, y = search_defect_button()
     moveNclick(x, y)
 
 
 def click_defect_solid_calib():
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = defectSolid()
+    x, y = search_defect_solid_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_pixel_defect_calib():
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = pixelDefect()
+    x, y = search_pixel_defect_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_shading_calib():
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = shading()
+    x, y = search_shading_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_uniformity_calib():
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = shading()
+    x, y = search_shading_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_defect_solid_stereo_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = defectSolidStereo()
+    openCalibrationOptMenu()
+    x, y = search_defect_solid_stereo_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_defect_solid_bpy_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = defectSolidBpy()
+    openCalibrationOptMenu()
+    x, y = search_defect_solid_Bpy()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_defect_solid_tomo_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = defectSolidTomo()
+    openCalibrationOptMenu()
+    x, y = search_defect_solid_tomo_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_uniformity_stereo_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = offset()
+    openCalibrationOptMenu()
+    x, y = search_offset_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_uniformity_bpy_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = uniformityBpy()
+    openCalibrationOptMenu()
+    x, y = search_uniformity_bpy_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_uniformity_tomo_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = uniformityTomo()
+    openCalibrationOptMenu()
+    x, y = search_uniformity_tomo_button()
     moveNclick(x, y)
-    enable_calib_button()
 
 
 def click_uniformity_es_calib():
     openMUTLMCU()
-    openCalibrationMenu()
-    x, y = uniformityES()
+    openCalibrationOptMenu()
+    x, y = search_uniformity_ES_button()
     moveNclick(x, y)
-    enable_calib_button()

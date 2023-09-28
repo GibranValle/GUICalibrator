@@ -1,4 +1,3 @@
-from util.location.AWS import calib_button, fieldCalib
 from util.location.generic import genericCoordinates, genericCoordinatesCenter
 from util.misc import printError
 
@@ -97,18 +96,3 @@ def search_enable_ment():
     printError('HVL BUTTON NOT FOUND')
     return -1, -1
 
-
-def search_calib_button():
-    x, y = calib_button()
-    if x and y > 0:
-        return x, y
-    printError('CALIB BUTTON NOT FOUND')
-    return -1, -1
-
-
-def search_field_button():
-    x, y = fieldCalib()
-    if x and y > 0:
-        return x, y
-    printError('CALIB BUTTON NOT FOUND')
-    return -1, -1

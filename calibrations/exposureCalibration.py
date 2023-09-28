@@ -1,7 +1,41 @@
 from time import sleep
+from calibrations.allExposureNeeded import allRequired
+from util.misc import printSuccess
 from util.serialCOM import communicate
 import customtkinter as ck
 from classes.constants import prep_exp_time, scale_factor, max_exposure_duration
+
+
+def smart_exposure_calibration(name: str, gui_object: ck.CTk = None, duration=600):
+    gui = gui_object
+    print('EXPOSURE CALIB')
+    total = 0
+
+    text1 = f'{name} calib starting...'
+    text2 = f'Wait for calib signal'
+    gui.generic.edit_output(text1, text2)
+    time = gui.delay.wait_for_calib_signal(1, duration)
+    printSuccess('CALIBRATION SIGNAL FOUND!')
+    if time < 0:
+        print('aborted')
+        text1 = f'{name} calib aborting...'
+        text2 = f'Please retry'
+        gui.generic.edit_output(text1, text2)
+        return
+    total += time
+    printSuccess('CALIBRATION SIGNAL FOUND!')
+
+    time = allRequired(gui_object)
+    if time < 0:
+        print('aborted')
+        text1 = f'{name} calib aborting...'
+        text2 = f'Please retry'
+        gui.generic.edit_output(text1, text2)
+        return
+    total += time
+    printSuccess('CALIBRATION FINISHED!')
+    return total
+
 
 def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
     gui = gui_object
@@ -13,6 +47,7 @@ def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
     gui.generic.clear_output()
 
     for i in range(1, exposures + 1):
+
         if gui.delay.status == 'stop':
             break
 
@@ -23,28 +58,39 @@ def genericCalibration(name, exposures, gui_object: ck.CTk = None, duration=8):
         if not communicate("S"):
             return gui.generic.not_responding()
 
-        text1 = f'Requested exposure {i} of {exposures}'
-        gui.generic.edit_output(text1)
-
         time = gui.delay.wait_for_stdby_signal(1, prep_exp_time)
         if time >= prep_exp_time * scale_factor:
             return gui.generic.abnormal()
         total += time
+        printSuccess('STDBY SIGNAL FOUND!')
+
+        text1 = f'Requested exposure {i} of {exposures}'
+        gui.generic.edit_output(text1)
+        time = gui.delay.wait_for_exposure_signal(0, 10)
+        if time >= prep_exp_time * scale_factor:
+            return gui.generic.abnormal()
+        total += time
+        printSuccess('EXPOSURE SIGNAL FOUND!')
 
         time += gui.delay.wait_for_block_signal(1, duration)
         if time > max_exposure_duration * scale_factor:
             return gui.generic.abnormal()
         total += time
+        printSuccess('BLOCK SIGNAL FOUND!')
 
         if not communicate("X"):
             return gui.generic.not_responding()
 
-        if i == exposures + 1:
+        if i == exposures:
             return gui.generic.request_end()
 
         if exposures > 1:
             gui.generic.request_end()
-            total += gui.delay.wait_for_stdby_signal(1, pause)
+            time = gui.delay.wait_for_stdby_signal(1, pause)
+            if time < 0:
+                return gui.generic.abnormal()
+            total += time
+            printSuccess('STDBY SIGNAL FOUND!')
 
     if gui.delay.status == 'stop':
         return gui.generic.abort_requested()
