@@ -63,14 +63,22 @@ def write2Read(message):
 
 
 def communicate(message):
+    """ Send message via SERIAL PORT to PC
+    :param message: message added to buffer
+    :return: True if OFFLINE MODE or MESSAGE CONFIRMATION RECEIVED
+    :raise: Connection error
+    ---------
+    :arg: "T" for test communication
+    :arg: "S" for short exposure - most used
+    :arg: "L" for long exposure - mA calibration only
+    """
     global offline
     if offline:
         return True
     res = write2Read(message)
     if res == message:
         return True
-    print(" *** COMMUNICATION ERROR ***")
-    return False
+    raise ConnectionError
 
 
 def getPorts():

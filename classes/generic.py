@@ -1,6 +1,3 @@
-from customtkinter import CTk as ck
-
-
 def createMessage(msg, count):
     minutes = count // 60
     secs = count % 60
@@ -9,7 +6,7 @@ def createMessage(msg, count):
 
 
 class Generic:
-    def __init__(self, gui_object: ck):
+    def __init__(self, gui_object):
         self.gui = gui_object
 
     def clearScreen(self):
@@ -19,7 +16,7 @@ class Generic:
         self.gui.frame_utils.pack_forget()
         self.gui.frame_main.pack_forget()
 
-    def updateGui(self, gui_object: ck):
+    def updateGui(self, gui_object):
         self.gui = gui_object
 
     def back2main(self):
@@ -59,6 +56,16 @@ class Generic:
             self.gui.label_output2_man.configure(text=msg2)
             self.gui.label_output2_auto.configure(text=msg2)
 
+    def edit_title(self, msg=''):
+        if msg != '':
+            self.gui.label_output1_man.configure(text=msg)
+            self.gui.label_output1_auto.configure(text=msg)
+
+    def edit_subtitle(self, msg=''):
+        if msg != '':
+            self.gui.label_output2_man.configure(text=msg)
+            self.gui.label_output2_auto.configure(text=msg)
+
     def clear_output(self):
         self.edit_output(' ', ' ')
 
@@ -78,8 +85,13 @@ class Generic:
         self.edit_output(text1, text2)
         self.gui.isRunning = False
 
+    def stabilizing(self):
+        text1 = f'Stabilizing...'
+        text2 = f'Please wait...'
+        self.edit_output(text1, text2)
+
     def abnormal(self):
-        text1 = 'Abnormal behavior'
+        text1 = 'App abnormal behavior'
         text2 = 'Please verify system'
         self.edit_output(text1, text2)
         self.gui.isRunning = False
@@ -98,20 +110,20 @@ class Generic:
         text2 = 'Please end exposure manually'
         self.edit_output(text1, text2)
 
-    def exposure_done(self, total, kind='exposure'):
-        text1 = 'Exposure done'
-        text2 = createMessage(f'This {kind} took', total)
-        self.edit_output(text1, text2)
-
     def accepted(self, kind='short'):
         text1 = f'Accepted {kind} exposure'
         self.edit_output(text1)
 
-    def exposure_done_counter(self, total, exposures):
+    def end_exp_msg(self, total, kind='exposure'):
+        text1 = 'Exposure done'
+        text2 = createMessage(f'This {kind} took', total)
+        self.edit_output(text1, text2)
+
+    def end_calib_msg(self, total, exposures):
         text1 = 'Calibration passed!'
         text2 = createMessage('Time', total)
         self.edit_output(text1, text2 + f' exposures: {exposures}')
 
-    def count(self, exposures):
+    def change_exp_count(self, exposures):
         text1 = f'Exposures count: {exposures}'
         self.edit_output(text1)

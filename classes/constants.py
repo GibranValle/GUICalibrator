@@ -17,7 +17,7 @@ PLAY = u'\u23F5'
 PAUSE = u'\u23F8'
 STOP = u'\u23F9'
 
-max_exposure_duration = 15
-prep_exp_time = 1200
-scale_factor = 0.75
-time_between_exposures = 30
+MAX_EXP_DURATION = 15
+MAX_MA_EXP_DURATION = 360
+PREP_EXP_TIME = 1200
+TIME_BTW_EXP = 30

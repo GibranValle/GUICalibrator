@@ -33,6 +33,6 @@ def noExposureCalibration(name, gui_object: ck.CTk = None, duration=600):
         return
     total += time
     printSuccess('CALIBRATION PASS FOUND!')
-    gui.generic.exposure_done_counter(total, 0)
+    gui.generic.end_calib_msg(total, 0)
     printSuccess('CALIBRATION FINISHED!')
     return total

@@ -1,8 +1,6 @@
 import tkinter as tk
 from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox
-from util import menu_list as m
 from classes.constants import *
-from classes.generic import *
 
 
 def create_main_frame(self):

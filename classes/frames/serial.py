@@ -1,15 +1,15 @@
-from customtkinter import CTkFrame, CTkButton, CTkLabel, CTk, CTkOptionMenu, CTkTextbox
-from util import menu_list as m
+from customtkinter import CTkFrame, CTkButton
 from classes.constants import *
-from classes.generic import *
 import util.serialCOM as com
 from threading import Thread
 from time import sleep
 
+
 def create_serial_frame(self):
     self.frame_serial = CTkFrame(self, fg_color=BG_COLOR_1)
 
-    self.button_serial = CTkButton(self.frame_serial, command=lambda: toggle_serial(self), font=self.font_text, text='Connect')
+    self.button_serial = CTkButton(self.frame_serial, command=lambda: toggle_serial(self), font=self.font_text,
+                                   text='Connect')
     self.button_serial.pack(pady=20, padx=10)
 
     self.main_menu = CTkButton(self.frame_serial, command=self.generic.back2main, font=self.font_text, text='Main menu',

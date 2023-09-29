@@ -2,13 +2,12 @@ from customtkinter import CTkFrame, CTkButton, CTkLabel, CTkOptionMenu, CTkSwitc
 from util import menu_list as m
 from classes.constants import *
 from calibrations.maFullCalib import mAFullCalibration
-from calibrations.exposureCalibration import *
 from threading import Thread
-from calibrations.allExposureNeeded import allRequired
+from exposures.exposure_options import start_smart_exposure, singleShot, TenShots
 
 
 class Manual:
-    def __init__(self, gui_object: ck):
+    def __init__(self, gui_object):
         self.gui = gui_object
 
     def only_start(self):
@@ -80,7 +79,7 @@ class Manual:
                 if gui.delay.status == 'pause':
                     gui.delay.startStatus()
                     return
-                Thread(target=allRequired, args=[gui], daemon=True).start()
+                Thread(target=start_smart_exposure, args=[gui], daemon=True).start()
 
             else:
                 return
