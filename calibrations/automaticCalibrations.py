@@ -79,6 +79,7 @@ def defectSolidCalib(gui_object=None):
         printError('CALIBRATION NOT INITIATED')
         return -1
     total = smart_FPD_calibration('defect solid', gui_object)
+    print(total)
     return total
 
 

@@ -67,7 +67,7 @@ class DelayManager:
         return secs
 
     def wait_for_block_signal(self, init: int, final: int):
-        minTime = 0
+        minTime = 1
         breakCondition = isBlocked
         text = 'Waiting for blocked'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
@@ -76,7 +76,7 @@ class DelayManager:
         return secs
 
     def wait_for_exposure_signal(self, init: int, final: int):
-        minTime = 0
+        minTime = 1
         breakCondition = isExposing
         text = 'Waiting for exposure'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
@@ -87,7 +87,7 @@ class DelayManager:
         return secs
 
     def wait_for_no_exposure_signal(self, init: int, final: int):
-        minTime = 0
+        minTime = 1
         breakCondition = isExposureDone
         text = 'Waiting for exposure end'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
@@ -96,7 +96,7 @@ class DelayManager:
         return secs
 
     def wait_for_stdby_signal(self, init: int, final: int):
-        minTime = 0
+        minTime = 1
         breakCondition = isStdBy
         text = 'Waiting for standby'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
@@ -114,7 +114,7 @@ class DelayManager:
         return secs
 
     def wait_for_calib_signal(self, init: int, final: int):
-        minTime = 0
+        minTime = 1
         breakCondition = isCalibratingFPD
         text = 'Waiting for Calib start'
         secs = self._generic_counter(init, final, minTime, breakCondition, text, calib_pass_flag=False)
@@ -123,7 +123,7 @@ class DelayManager:
         return secs
 
     def wait_for_calib_pass(self, init: int, final: int):
-        minTime = 0
+        minTime = 1
         breakCondition = isCalibPass
         text = 'Waiting for Pass'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
