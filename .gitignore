@@ -15,3 +15,5 @@ macList.txt
 setup.ini
 
 /dist/*.exe
+
+**/__pycache__

@@ -83,7 +83,7 @@ def search_defect_solid_stereo_button():
     return genericCoordinatesCenter('mutl/calib_defect_solid_stereo')
 
 
-def search_defect_solid_Bpy():
+def search_defect_solid_bpy_button():
     return genericCoordinatesCenter('mutl/calib_defect_solid_bpy')
 
 

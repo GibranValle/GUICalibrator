@@ -43,7 +43,8 @@ def openCalibrationOptMenu():
     moveNclick(x, y)
 
 
-def click_mcu_calib_button(button: list_values):
+def click_mcu_calib_button(button: PossibleValuesMenu):
+
     openMUTLMCU()
     openCalibrationMenu()
     if button == 'offset':
@@ -52,7 +53,26 @@ def click_mcu_calib_button(button: list_values):
         x, y = search_defect_button()
     elif button == 'defect solid':
         x, y = search_defect_solid_button()
-    elif button == 'text':
+    elif button == 'pixel defect':
+        x, y = search_pixel_defect_button()
+    elif button == 'shading':
+        x, y = search_shading_button()
+    elif button == 'x-ray uniformity':
+        x, y = search_uniformity_button()
+    elif button == 'defect solid stereo':
+        x, y = search_defect_solid_stereo_button()
+    elif button == 'defect solid biopsy':
+        x, y = search_defect_solid_bpy_button()
+    elif button == 'defect solid tomo':
+        x, y = search_defect_solid_tomo_button()
+    elif button == 'x-ray uniformity stereo':
+        x, y = search_uniformity_stereo_button()
+    elif button == 'x-ray uniformity biopsy':
+        x, y = search_uniformity_bpy_button()
+    elif button == 'x-ray uniformity tomo':
+        x, y = search_defect_solid_tomo_button()
+    elif button == 'x-ray uniformity ES':
+        x, y = search_uniformity_ES_button()
 
     moveNclick(x, y)
 
@@ -95,7 +115,7 @@ def click_defect_solid_stereo_calib():
 def click_defect_solid_bpy_calib():
     openMUTLMCU()
     openCalibrationOptMenu()
-    x, y = search_defect_solid_Bpy()
+    x, y = search_defect_solid_bpy_button()
     moveNclick(x, y)
 
 
