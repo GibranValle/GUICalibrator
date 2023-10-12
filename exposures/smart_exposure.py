@@ -4,18 +4,34 @@ from util.delayManager import isCalibPass
 from shell.AWS import clickOK
 from classes.constants import PREP_EXP_TIME, MAX_EXP_DURATION, TIME_BTW_EXP, MAX_MA_EXP_DURATION
 
+CALIB_TYPE = 'ma_calib' or 'manual' or 'auto'
 
-def smart_exposure_loop(gui_object, exposures, countdown=0):
-    """" Generic exposure loop, must be usefully for every shot or calibration process
+
+def smart_exposure_loop(gui_object, exposures=100, calib_type: CALIB_TYPE = 'auto'):
+    f"""" Generic exposure loop, must be usefully for every shot or calibration process
     Parameters
-    ----------
-    gui_object: from GUI class contains delay, generic
-    exposures: needed only if manual mode (single or ten)
-    countdown: needed only if mA calibration
+    ---------
+    :param calib_type: 'ma_calib' or 'manual' or 'auto'
+    :param gui_object: from GUI class contains delay, generic
+    :param exposures: needed only if manual mode (single or ten)
     Return
     ---------
-    Total time of exposure (manual) or calibration time(auto, mA)
+    :return Total time of exposure (manual) or calibration time(auto, mA)
     """
+
+    # AUTO
+    countdown = 0
+    skip_pass = False
+
+    if calib_type == 'ma_calib':
+        exposures = 1
+        countdown = 10
+        skip_pass = True
+
+    elif calib_type == 'manual':
+        skip_pass = True
+        countdown = 0
+
     gui = gui_object
     gui.delay.startStatus()
     total = 0
@@ -38,7 +54,7 @@ def smart_exposure_loop(gui_object, exposures, countdown=0):
             if gui.delay.status == 'stop':
                 return gui.generic.abort_requested()
 
-            if isCalibPass():
+            if isCalibPass() and not skip_pass:
                 break
 
             if gui.is_auto_ok:
@@ -62,7 +78,7 @@ def smart_exposure_loop(gui_object, exposures, countdown=0):
             gui.generic.request_end()
             communicate("X")
 
-            if isCalibPass():
+            if isCalibPass() and not skip_pass:
                 break
 
             count += 1
@@ -73,11 +89,13 @@ def smart_exposure_loop(gui_object, exposures, countdown=0):
     except ConnectionError:
         return gui.generic.not_responding()
 
-    # MANUAL MODE
-    if count >= exposures and countdown <= 0:
+    if calib_type == 'ma_calib':
+        gui.generic.end_exp_msg(total, 'Exposure')
+        gui.manual.pushed('stop')
+
+    elif calib_type == 'manual':
         gui.generic.end_exp_msg(total, 'Set')
         gui.manual.pushed('stop')
-        return total
 
     # AUTO MODE
     gui.generic.end_calib_msg(total, count)
