@@ -22,8 +22,6 @@ class DelayManager:
             count = range(init, final - 1, -1)
         secs = 0
         for c in count:
-            if breakCondition:
-                print(breakCondition())
             if self.status == 'stop':
                 return -1
             if self.status == 'pause':
@@ -61,7 +59,6 @@ class DelayManager:
         minTime = 0
         breakCondition = None
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
-        print(secs, init)
         if secs > init + 1:
             raise ValueError('Secs cannot be greater than expected')
         return secs
@@ -69,7 +66,7 @@ class DelayManager:
     def wait_for_block_signal(self, init: int, final: int):
         minTime = 1
         breakCondition = isBlocked
-        text = 'Waiting for blocked'
+        text = 'Waiting: blocked signal'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -78,9 +75,8 @@ class DelayManager:
     def wait_for_exposure_signal(self, init: int, final: int):
         minTime = 1
         breakCondition = isExposing
-        text = 'Waiting for exposure'
+        text = 'Waiting: exp start'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
-        print(secs)
         print('EXPOSURE FOUND')
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -89,7 +85,7 @@ class DelayManager:
     def wait_for_no_exposure_signal(self, init: int, final: int):
         minTime = 1
         breakCondition = isExposureDone
-        text = 'Waiting for exposure end'
+        text = 'Waiting: exp end'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -98,7 +94,7 @@ class DelayManager:
     def wait_for_stdby_signal(self, init: int, final: int):
         minTime = 1
         breakCondition = isStdBy
-        text = 'Waiting for standby'
+        text = 'Waiting: stdby signal'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -107,7 +103,7 @@ class DelayManager:
     def wait_for_long_end(self, final: int, init: int):
         minTime = 20
         breakCondition = isExposureDone
-        text = 'Wait for end'
+        text = 'Waiting: long exp end'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -116,7 +112,7 @@ class DelayManager:
     def wait_for_calib_signal(self, init: int, final: int):
         minTime = 1
         breakCondition = isCalibratingFPD
-        text = 'Waiting for Calib start'
+        text = 'Waiting: calib start signal'
         secs = self._generic_counter(init, final, minTime, breakCondition, text, calib_pass_flag=False)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -125,7 +121,7 @@ class DelayManager:
     def wait_for_calib_pass(self, init: int, final: int):
         minTime = 1
         breakCondition = isCalibPass
-        text = 'Waiting for Pass'
+        text = 'Waiting: calib pass signal'
         secs = self._generic_counter(init, final, minTime, breakCondition, text)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')
@@ -134,7 +130,7 @@ class DelayManager:
     def wait_for_ok_button(self, final: int, init: int):
         minTime = 1
         breakCondition = isWaitingOk
-        text = 'Wait for ok button'
+        text = 'Waiting: ok button'
         secs = self._generic_counter(init, final, minTime, breakCondition, text, calib_pass_flag=False)
         if secs > final:
             raise ValueError('Secs cannot be greater than expected')

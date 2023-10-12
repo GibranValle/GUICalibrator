@@ -3,7 +3,7 @@ from util import menu_list as m
 from classes.constants import *
 from calibrations.maFullCalib import mAFullCalibration
 from threading import Thread
-from exposures.exposure_options import start_smart_exposure, singleShot, TenShots
+from exposures.man_exp_options import start_smart_exposure, singleShot, TenShots
 
 
 class Manual:
@@ -11,6 +11,7 @@ class Manual:
         self.gui = gui_object
 
     def only_start(self):
+        print('only start')
         gui = self.gui
         gui.start_button_man.configure(state='normal')
         gui.pause_button_man.configure(state='disabled')
@@ -45,6 +46,11 @@ class Manual:
             gui.delay.pauseStatus()
             self.not_only_pause()
             return
+
+        elif button == 'stop':
+            print('man push stoped')
+            gui.delay.stopStatus()
+            self.only_start()
 
         elif button == 'start':
 
@@ -85,11 +91,6 @@ class Manual:
                 return
 
             gui.delay.startStatus()
-
-        elif button == 'stop':
-            gui.delay.stopStatus()
-            gui.delay.stopStatus()
-            self.only_start()
 
     def create_manual_frame(self):
         gui = self.gui

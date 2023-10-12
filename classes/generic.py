@@ -1,3 +1,9 @@
+import time
+from time import sleep
+
+STABILIZING_TIME = 2
+
+
 def createMessage(msg, count):
     minutes = count // 60
     secs = count % 60
@@ -89,6 +95,7 @@ class Generic:
         text1 = f'Stabilizing...'
         text2 = f'Please wait...'
         self.edit_output(text1, text2)
+        sleep(STABILIZING_TIME)
 
     def abnormal(self):
         text1 = 'App abnormal behavior'

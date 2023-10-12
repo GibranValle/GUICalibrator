@@ -2,6 +2,8 @@ from shell.generic import openApp, process_exists, changeWindow
 from util.location.RU_MUTL import *
 from util.location.MCU import *
 from util.misc import moveNclick
+from util.menu_list import no_exp_menu, exp_calib_menu, only_full_menu, ES_menu, full_menu
+from util.PossibleValuesMenu import PossibleValuesMenu, list_values
 
 
 def openMUTLMCU():
@@ -41,17 +43,17 @@ def openCalibrationOptMenu():
     moveNclick(x, y)
 
 
-def click_offset_calib():
+def click_mcu_calib_button(button: list_values):
     openMUTLMCU()
     openCalibrationMenu()
-    x, y = search_offset_button()
-    moveNclick(x, y)
+    if button == 'offset':
+        x, y = search_offset_button()
+    elif button == 'defect':
+        x, y = search_defect_button()
+    elif button == 'defect solid':
+        x, y = search_defect_solid_button()
+    elif button == 'text':
 
-
-def click_defect_calib():
-    openMUTLMCU()
-    openCalibrationMenu()
-    x, y = search_defect_button()
     moveNclick(x, y)
 
 
