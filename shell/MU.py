@@ -2,7 +2,7 @@ from util.location.MU import MU_page_0, search_calibration_MU, search_generator_
     search_enable_ment, search_toggle_HVL
 from util.location.RU_MUTL import right
 from shell.generic import openApp, process_exists, changeWindow
-from util.misc import printError, moveNclick, moveN2Click
+from util.misc import printError, move_n_click, moveN2Click
 
 
 def openMUTLMU():
@@ -17,7 +17,7 @@ def is_MU_page_0():
     if x > 0 and y > 0:
         # NO FIRST PAGE, CHANGE TO NEXT
         x, y = right()
-        moveNclick(x, y)
+        move_n_click(x, y)
 
 
 def enable_ment():
@@ -25,7 +25,7 @@ def enable_ment():
     openGeneratorMUMenu()
     x, y = search_enable_ment()
     if x and y > 0:
-        moveNclick(x, y)
+        move_n_click(x, y)
 
 
 def toggle_MAG():
@@ -33,7 +33,7 @@ def toggle_MAG():
     openCalibrationMUMenu()
     x, y = search_toggle_MAG()
     if x and y > 0:
-        moveNclick(x, y)
+        move_n_click(x, y)
 
 
 def toggle_HVL():
@@ -41,7 +41,7 @@ def toggle_HVL():
     openCalibrationMUMenu()
     x, y = search_toggle_HVL()
     if x and y > 0:
-        moveNclick(x, y)
+        move_n_click(x, y)
     printError('TOGGLE HVL BUTTON NOT FOUND')
 
 
@@ -52,7 +52,7 @@ def openCalibrationMUMenu():
         print('ALREADY SELECTED')
         return
     elif x > 0 and y > 0:
-        moveNclick(x, y)
+        move_n_click(x, y)
         return
     printError('CALIB MU BUTTON NOT FOUND')
 
@@ -64,6 +64,6 @@ def openGeneratorMUMenu():
         print('ALREADY SELECTED')
         return
     elif x > 0 and y > 0:
-        moveNclick(x, y)
+        move_n_click(x, y)
         return
     printError('GENERATOR MU BUTTON NOT FOUND')

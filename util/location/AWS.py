@@ -1,46 +1,52 @@
 from util.location.generic import genericCoordinatesCenter
+from util.CustomExceptions import IconNotFoundError
 
 
-def exposureIconLarge():
-    return genericCoordinatesCenter('ff/xray_exposing')
+def exposureIconLarge() -> tuple[int, int]:
+    return genericCoordinatesCenter("ff/xray_exposing")
 
 
 # AWS
-def exposureIcon():
-    return genericCoordinatesCenter('aws/xray_exposure')
+def exposureIcon() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/xray_exposure", 0.95)
 
 
-def blockedIcon():
-    return genericCoordinatesCenter('aws/xray_blocked')
+def blockedIcon() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/xray_blocked", 0.9)
 
 
-def stdbyIcon():
-    return genericCoordinatesCenter('aws/xray_standby')
+def stdbyIcon() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/xray_standby", 0.95)
 
 
-def okExposure():
-    return genericCoordinatesCenter('aws/ok')
+def okExposure() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/ok")
 
 
-def okExposure_green():
-    return genericCoordinatesCenter('aws/ok2')
+def okExposure_green() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/ok2")
 
 
-def calib_button():
-    return genericCoordinatesCenter('aws/calib_button')
+def calib_button() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/calib_button")
 
 
-def fieldCalib():
-    return genericCoordinatesCenter('aws/fieldcalib_button')
+def fieldCalib() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/fieldcalib_button")
 
 
-def calibracionIcon():
-    return genericCoordinatesCenter('aws/calibracion')
+def fpd_calibrating() -> tuple[int, int]:
+    try:
+        genericCoordinatesCenter("aws/pasar", 0.95)
+        genericCoordinatesCenter("aws/saltar", 0.95)
+    except IconNotFoundError:
+        pass
+    return genericCoordinatesCenter("aws/calibracion", 0.98)
 
 
-def pasarIcon():
-    return genericCoordinatesCenter('aws/pasar')
+def pass_icon() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/pasar", 0.95)
 
 
-def saltarIcon():
-    return genericCoordinatesCenter('aws/saltar')
+def saltar_icon() -> tuple[int, int]:
+    return genericCoordinatesCenter("aws/saltar", 0.95)

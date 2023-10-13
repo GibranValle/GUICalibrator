@@ -1,21 +1,22 @@
 import time
 import serial
 import serial.tools.list_ports
+from serial import Serial
 
-arduino = None
-buffer = ''
+arduino: Serial | None = None  # type: ignore
+buffer = ""
 isListening = False
-response = ''
+response: str = ""
 waitingResponse = False
 offline = True
 
 
 def startListening():
-    print('START LISTENING THREAD')
+    print("START LISTENING THREAD")
     global arduino, isListening, buffer, response, waitingResponse, offline
     arduino = advancedSerialInit()
-    if arduino is None:
-        print('NO ARDUINO IS CONNECTED')
+    if arduino is not Serial:
+        print("NO ARDUINO IS CONNECTED")
         return
 
     if communicate("X"):
@@ -25,16 +26,15 @@ def startListening():
     while isListening:
         if not arduino.isOpen():
             print(f" *** ARDUINO IS NO LONGER CONNECTED *** ")
-            serialError = True
             break
         # data to send
-        if buffer != '':
+        if buffer != "":
             arduino.write(f"{buffer}\n".encode())
-            buffer = ''
+            buffer = ""
         # data to read
         elif arduino.in_waiting:
-            response = arduino.readline().decode('ascii').rstrip()
-            if response != '':
+            response = arduino.readline().decode("ascii").rstrip()
+            if response != "":
                 waitingResponse = False
 
 
@@ -45,15 +45,15 @@ def endListening():
     offline = True
     isListening = False
     try:
-        arduino.close()
+        arduino.close()  # type: ignore
         time.sleep(2)
-        print(' *-- PORT CLOSED --* ')
+        print(" *-- PORT CLOSED --* ")
     except AttributeError:
-        print(' -- ABORTION ANORMALLY --')
+        print(" -- ABORTION ANORMALLY --")
         return
 
 
-def write2Read(message):
+def write2Read(message: str):
     global buffer, waitingResponse, response
     waitingResponse = True
     buffer = message
@@ -62,8 +62,8 @@ def write2Read(message):
     return response
 
 
-def communicate(message):
-    """ Send message via SERIAL PORT to PC
+def communicate(message: str) -> bool:
+    """Send message via SERIAL PORT to PC
     :param message: message added to buffer
     :return: True if OFFLINE MODE or MESSAGE CONFIRMATION RECEIVED
     :raise: Connection error
@@ -86,22 +86,21 @@ def getPorts():
     return ports
 
 
-def findItem(portsFound, matchingText):
-    commPort = ''
-    numConnections = len(portsFound)
+def findItem(portsFound, matchingText: str):  # type: ignore
+    commPort = ""
+    numConnections = len(portsFound)  # type: ignore
     for i in range(0, numConnections):
-        port = portsFound[i]
-        strPort = str(port)
+        port = portsFound[i]  # type: ignore
+        strPort = str(port)  # type: ignore
         if matchingText in strPort:
-            splitPort = strPort.split(' ')
+            splitPort = strPort.split(" ")
             commPort = splitPort[0]
     return commPort
 
 
-def advancedSerialInit():
-    portName = 'CH340'
+def advancedSerialInit() -> serial.Serial | None:
+    portName = "CH340"
     foundPorts = getPorts()
     connectPort = findItem(foundPorts, portName)
-    if connectPort != '':
-        arduino = serial.Serial(connectPort, 9600)
-        return arduino
+    if connectPort != "":
+        return serial.Serial(connectPort, 9600)

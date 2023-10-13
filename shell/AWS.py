@@ -1,6 +1,7 @@
 from time import sleep
 from util.location.AWS import okExposure, calib_button, fieldCalib
-from util.misc import advancedClick, moveNclick, moveN2Click, printSuccess
+from util.misc import advancedClick, moveN2Click, click_move
+from util.CustomExceptions import IconNotFoundError
 
 
 def enable_FPD_calib():
@@ -10,22 +11,31 @@ def enable_FPD_calib():
         sleep(1)
         x, y = fieldCalib()
         if x > 0 and y > 0:
-            moveNclick(x, y)
+            click_move(x, y)
             return True
-        raise TypeError('FIELD BUTTON NOT FOUND')
-    raise TypeError('CALIB BUTTON NOT FOUND')
+        raise TypeError("FIELD BUTTON NOT FOUND")
+    raise TypeError("CALIB BUTTON NOT FOUND")
 
 
 def click_calib_button():
-    x, y = calib_button()
-    moveN2Click(x, y)
+    try:
+        x, y = calib_button()
+        moveN2Click(x, y)
+    except IconNotFoundError:
+        pass
 
 
 def click_field_calib():
-    x, y = fieldCalib()
-    moveNclick(x, y)
+    try:
+        x, y = fieldCalib()
+        click_move(x, y)
+    except IconNotFoundError:
+        pass
 
 
 def clickOK():
-    x, y = okExposure()
-    advancedClick(x, y)
+    try:
+        x, y = okExposure()
+        advancedClick(x, y)
+    except IconNotFoundError:
+        pass

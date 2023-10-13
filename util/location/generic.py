@@ -1,35 +1,25 @@
 import pyautogui
 import os
+from util.CustomExceptions import IconNotFoundError
 
 path = os.getcwd()
-"""
-from pathlib import Path
-def fetch_resource(resource_path: Path) -> Path:
-    Function needed to run --onefile
-    :param resource_path:
-    :return:
-    try:  # running as *.exe; fetch resource from temp directory
-        base_path = Path(sys._MEIPASS)
-    except AttributeError:  # running as script; return unmodified path
-        return resource_path
-    else:  # return temp resource path
-        return base_path.joinpath(resource_path)
-"""
 
 
-def genericCoordinates(name, confidence=0.75):
+def genericCoordinates(
+    name: str, confidence: float = 0.75
+) -> tuple[int, int, int, int]:
     try:
-        x, y, w, h = pyautogui.locateOnScreen(f'{path}/img/{name}.png', confidence=confidence)
-        return x, y, w, h
+        x, y, w, h = pyautogui.locateOnScreen(f"{path}/img/{name}.png", confidence=confidence)  # type: ignore
     except TypeError:
-        return -1, -1, -1, -1
+        raise IconNotFoundError(f"{name} NOT FOUND")
+    else:
+        return x, y, w, h  # type: ignore
 
 
-def genericCoordinatesCenter(name, confidence=0.75):
-    x, y = -1, -1
+def genericCoordinatesCenter(name: str, confidence: float = 0.75) -> tuple[int, int]:
     try:
-        x, y = pyautogui.locateCenterOnScreen(f'{path}/img/{name}.png', confidence=confidence)
-        return x, y
-
+        x, y = pyautogui.locateCenterOnScreen(f"{path}/img/{name}.png", confidence=confidence)  # type: ignore
     except TypeError:
-        return x, y
+        raise IconNotFoundError(f"{name} NOT FOUND")
+    else:
+        return x, y  # type: ignore
