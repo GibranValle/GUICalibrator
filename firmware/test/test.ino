@@ -1,8 +1,16 @@
 // UPDATED FIRMWARE TO MATCH NEW PCB
 #include "variables.h"
+#include <SoftwareSerial.h>
+const byte rxPin = 2;
+const byte txPin = 3;
+SoftwareSerial mySerial(rxPin, txPin);
 
 void setup() {
   // initialize serial:
+  mySerial.begin(9600);
+  mySerial.listen();
+  attachInterrupt(digitalPinToInterrupt(rxPin), serialEvent2, CHANGE);
+
   Serial.begin(9600);
   relayInit();
   pinMode(ledPin, OUTPUT);
@@ -19,42 +27,13 @@ void setup() {
 }
 
 void loop() {
-  // stall if not complete
-  if (!stringComplete) return;
+  serialMenu2();
+  serialMenu1();
+}
 
-  // save local string an clean buffer and flag
-  char fisrtLetter = inputString[0];
-  stringComplete = false;
-  inputString = "";
-  
-
-  switch (fisrtLetter) {
-    case 'M':
-      sensorValue = analogRead(analogInPin);
-      Serial.print("M:");
-      Serial.println(sensorValue);
-      break;
-
-    case 'S':
-      performShortExposure();
-      Serial.println("S");
-      break;
-
-    case 'L':
-      performLongxposure();
-      Serial.println("L");
-      break;
-
-    case 'X':
-      endExposure();
-      Serial.println("X");
-      TIMSK1 = !TIMSK1 & (1 << OCIE1A);  //disable timer
-      break;
-
-    case 'T':
-      TIMSK1 = !TIMSK1 & (1 << OCIE1A);  //disable timer
-      Serial.println("T");
-      break;
+void serialEvent2() {
+  if (!serialIncome) {
+    serialIncome = true;
   }
 }
 
